@@ -7,7 +7,11 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
-//TODO
+/**
+ * Data Transfer Object for user sign-up requests.
+ * This class encapsulates the necessary information
+ * for creating a new user account in the application
+ */
 public class SignUpRequest {
 
     @NotNull
