@@ -13,4 +13,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return an Optional containing the found user, or empty if no user with the specified email exists
      */
     Optional<User> findByEmail(String email);
+
+    /**
+     * Finds a user by their Google ID.
+     *
+     * @param credentialId the Google ID of the user to find
+     * @return an Optional containing the found user, or empty if no user with the specified Google ID exists
+     */
+    Optional<User> findByCredentialId(String credentialId);
 }

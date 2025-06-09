@@ -1,12 +1,12 @@
 package com.talection.talection.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.talection.talection.enums.AuthProvider;
 import com.talection.talection.enums.Gender;
 import com.talection.talection.enums.Role;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
@@ -18,7 +18,8 @@ public class User {
     private Long id;
 
     @NotBlank
-    private String googleId;
+    @Column(unique = true)
+    private String credentialId;
 
     @NotBlank
     private String firstName;
@@ -31,14 +32,35 @@ public class User {
 
     private String profilePictureUrl;
 
+    @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider;
+
+    @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @CreationTimestamp
     private Date createdAt;
+
+    @JsonIgnore
+    private String password;
 
     public User() {
         // Default constructor for JPA
+    }
+
+    public AuthProvider getAuthProvider() {
+        return authProvider;
+    }
+
+    public void setAuthProvider(AuthProvider authProvider) {
+        this.authProvider = authProvider;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getEmail() {
@@ -49,8 +71,8 @@ public class User {
         return id;
     }
 
-    public String getGoogleId() {
-        return googleId;
+    public String getCredentialId() {
+        return credentialId;
     }
 
     public String getFirstName() {
@@ -77,8 +99,8 @@ public class User {
         return createdAt;
     }
 
-    public void setGoogleId(String googleId) {
-        this.googleId = googleId;
+    public void setCredentialId(String credentialId) {
+        this.credentialId = credentialId;
     }
 
     public void setFirstName(String firstName) {
@@ -103,5 +125,9 @@ public class User {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
