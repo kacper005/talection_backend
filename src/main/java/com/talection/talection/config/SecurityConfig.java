@@ -56,23 +56,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Allow only GET requests
                         .requestMatchers(
-                                HttpMethod.GET,
-                                "/car",
-                                "/car/{id}",
-                                "/company/with_rentals",
-                                "/brand/with_rentals",
-                                "/fuel/with_rentals",
-                                "/image/{carId}/{imageType}/{imageWidth}",
-                                "/order/car/{carId}",
-                                "company/cars/{companyId}"
+                                HttpMethod.GET,""
                         ).permitAll()
                         // Allow all requests
-                        .requestMatchers(
-                                "/user/add",
-                                "/",
-                                "/authenticate",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**"
+                        .requestMatchers(""
                         ).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
