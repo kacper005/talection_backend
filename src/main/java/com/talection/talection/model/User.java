@@ -32,6 +32,7 @@ public class User {
     private String lastName;
 
     @NotBlank
+    @Column(unique = true)
     private String email;
 
     private String profilePictureUrl;
