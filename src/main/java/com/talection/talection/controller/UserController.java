@@ -4,14 +4,15 @@ import com.talection.talection.dto.SignUpRequest;
 import com.talection.talection.enums.AuthProvider;
 import com.talection.talection.exception.UserAlreadyExistsException;
 import com.talection.talection.model.User;
+import com.talection.talection.security.AccessUserDetails;
 import com.talection.talection.service.UserService;
+import jakarta.persistence.Access;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -56,5 +57,13 @@ public class UserController {
 
         logger.error("Unsupported authentication provider: {}", signUpRequest.getAuthProvider());
         return ResponseEntity.badRequest().body("Unsupported authentication provider");
+    }
+
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
+    @GetMapping("/me")
+    public ResponseEntity<User> getCurrentUser() {
+        AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getUserByEmail(userDetails.getUsername());
+        return ResponseEntity.ok(user);
     }
 }
