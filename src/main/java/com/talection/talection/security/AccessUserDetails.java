@@ -6,6 +6,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+/**
+ * AccessUserDetails is a custom implementation of UserDetails that provides user information
+ * for authentication purposes.
+ */
 public class AccessUserDetails implements UserDetails {
     private String email;
     private String password;

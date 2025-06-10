@@ -21,6 +21,13 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Loads a user by their email address.
+     *
+     * @param email the email address of the user
+     * @return UserDetails object containing user information
+     * @throws UsernameNotFoundException if the user is not found
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         logger.info("Loading user by email: {}", email);

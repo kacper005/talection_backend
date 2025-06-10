@@ -10,7 +10,11 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 
-
+/**
+ * Utility class for verifying Google ID tokens.
+ * This class uses the Google API client library to verify the authenticity of ID tokens
+ * issued by Google, ensuring that they are valid and intended for the specified client ID.
+ */
 public class GoogleTokenVerifier {
 
     @Value("${google.client-id}")
