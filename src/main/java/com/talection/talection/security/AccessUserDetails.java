@@ -7,8 +7,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 public class AccessUserDetails implements UserDetails {
+    private String email;
+    private String password;
+
     public AccessUserDetails(User user) {
-        //TODO
+        this.email = user.getEmail();
+        this.password = user.getPassword();
     }
 
     @Override
@@ -18,11 +22,11 @@ public class AccessUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return email;
     }
 }

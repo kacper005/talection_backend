@@ -33,6 +33,14 @@ public class SignUpRequest {
 
     private Gender gender;
 
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public Gender getGender() {
+        return this.gender;
+    }
+
     private void setAuthProvider(AuthProvider authProvider) {
         this.authProvider = authProvider;
     }

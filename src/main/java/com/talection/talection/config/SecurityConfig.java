@@ -56,10 +56,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Allow only GET requests
                         .requestMatchers(
-                                HttpMethod.GET,""
+                                HttpMethod.GET
                         ).permitAll()
                         // Allow all requests
-                        .requestMatchers(""
+                        .requestMatchers("/user/add", "/authenticate"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
