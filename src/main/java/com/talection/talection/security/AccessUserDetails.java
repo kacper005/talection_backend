@@ -13,11 +13,13 @@ import java.util.Collections;
  * for authentication purposes.
  */
 public class AccessUserDetails implements UserDetails {
+    private Long id;
     private String email;
     private String password;
     private GrantedAuthority authority;
 
     public AccessUserDetails(User user) {
+        this.id = user.getId();
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.authority = new SimpleGrantedAuthority(user.getRole().name());
@@ -36,5 +38,9 @@ public class AccessUserDetails implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
