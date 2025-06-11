@@ -3,24 +3,15 @@ package com.talection.talection.dto;
 import com.talection.talection.enums.StudyLevel;
 
 public class AddStudentProfileRequest {
-    private StudyLevel studyLevel;
-    private String fieldOfStudy;
     private int yearOfStudy;
+    private Long studyProgramId;
 
-    public void setStudyLevel(StudyLevel studyLevel) {
-        this.studyLevel = studyLevel;
+    public void setStudyProgramId(Long studyProgramId) {
+        this.studyProgramId = studyProgramId;
     }
 
-    public StudyLevel getStudyLevel() {
-        return studyLevel;
-    }
-
-    public void setFieldOfStudy(String fieldOfStudy) {
-        this.fieldOfStudy = fieldOfStudy;
-    }
-
-    public String getFieldOfStudy() {
-        return fieldOfStudy;
+    public Long getStudyProgramId() {
+        return studyProgramId;
     }
 
     public void setYearOfStudy(int yearOfStudy) {

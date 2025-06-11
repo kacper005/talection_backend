@@ -51,8 +51,7 @@ public class StudentProfileService {
 
         StudentProfile studentProfile = new StudentProfile();
         studentProfile.setId(userId);
-        studentProfile.setStudyLevel(request.getStudyLevel());
-        studentProfile.setFieldOfStudy(request.getFieldOfStudy());
+        studentProfile.setStudyProgramId(request.getStudyProgramId());
         studentProfile.setYearOfStudy(request.getYearOfStudy());
         studentProfileRepository.save(studentProfile);
     }

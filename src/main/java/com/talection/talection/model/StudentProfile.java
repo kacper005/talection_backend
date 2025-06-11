@@ -16,10 +16,7 @@ public class StudentProfile {
     private Long id;
 
     @NotNull
-    private StudyLevel studyLevel;
-
-    @NotBlank
-    private String fieldOfStudy;
+    private Long studyProgramId;
 
     private int yearOfStudy;
 
@@ -28,21 +25,19 @@ public class StudentProfile {
     }
 
     /**
-     * Sets the study level of the student.
-     *
-     * @param studyLevel the level of study (e.g., BACHELOR, MASTER, PHD)
+     * The field of study for the student (e.g., Computer Science, Mathematics).
      */
-    public void setStudyLevel(StudyLevel studyLevel) {
-        this.studyLevel = studyLevel;
+    public void setStudyProgramId(Long studyProgramId) {
+        this.studyProgramId = studyProgramId;
     }
 
     /**
-     * Gets the study level of the student.
+     * Gets the ID of the study program for the student.
      *
-     * @return the level of study
+     * @return the study program ID
      */
-    public StudyLevel getStudyLevel() {
-        return studyLevel;
+    public Long getStudyProgramId() {
+        return studyProgramId;
     }
 
     /**
@@ -61,24 +56,6 @@ public class StudentProfile {
      */
     public Long getId() {
         return id;
-    }
-
-    /**
-     * Sets the field of study for the student.
-     *
-     * @param fieldOfStudy the field of study (e.g., Computer Science, Mathematics)
-     */
-    public void setFieldOfStudy(String fieldOfStudy) {
-        this.fieldOfStudy = fieldOfStudy;
-    }
-
-    /**
-     * Gets the field of study for the student.
-     *
-     * @return the field of study
-     */
-    public String getFieldOfStudy() {
-        return fieldOfStudy;
     }
 
     /**
