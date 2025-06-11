@@ -2,6 +2,7 @@ package com.talection.talection.controller;
 
 import com.talection.talection.dto.SignUpRequest;
 import com.talection.talection.enums.AuthProvider;
+import com.talection.talection.enums.Role;
 import com.talection.talection.exception.UserAlreadyExistsException;
 import com.talection.talection.model.User;
 import com.talection.talection.security.AccessUserDetails;
@@ -33,19 +34,28 @@ public class UserController {
         if (signUpRequest == null) {
             return ResponseEntity.badRequest().body("Sign-up request cannot be null");
         }
-
+        if (signUpRequest.getRole() == Role.ADMIN) {
+            return ResponseEntity.status(401).body("Unauthorized: Admin role cannot be used for sign-up");
+        }
 
         User user = new User();
         if (signUpRequest.getAuthProvider() == AuthProvider.LOCAL) {
             try {
                 user.setAuthProvider(AuthProvider.LOCAL);
+
+                if (signUpRequest.getRole() == Role.STUDENT || signUpRequest.getRole() == Role.TEACHER) {
+                    user.setRole(signUpRequest.getRole());
+                } else {
+                    return ResponseEntity.badRequest().body("Invalid role for sign-up");
+                }
+
                 user.setFirstName(signUpRequest.getFirstName());
                 user.setLastName(signUpRequest.getLastName());
                 user.setEmail(signUpRequest.getEmail());
-                user.setRole(signUpRequest.getRole());
                 user.setGender(signUpRequest.getGender());
 
                 userService.addUser(user, signUpRequest.getPassword());
+                logger.info("User added successfully with email: {}", signUpRequest.getEmail());
                 return ResponseEntity.ok("User added successfully");
             } catch (IllegalArgumentException e) {
                 return ResponseEntity.badRequest().body("Invalid sign-up request");
