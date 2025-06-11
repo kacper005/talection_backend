@@ -64,7 +64,27 @@ public class StudentProfileController {
             studentProfileService.addStudentProfile(request, userDetails.getId());
             return ResponseEntity.ok("Student profile added successfully");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Invalid student profile request: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Invalid student profile request");
+        }
+    }
+
+    /**
+     * Removes the student profile for the currently authenticated user.
+     *
+     * @return ResponseEntity indicating success or failure
+     */
+    @DeleteMapping("/delete")
+    @PreAuthorize("hasAuthority('STUDENT')")
+    public ResponseEntity<String> removeStudentProfileForCurrentAuthenticatedUser() {
+        AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        try {
+            studentProfileService.removeStudentProfile(userDetails.getId());
+            return ResponseEntity.ok("Student profile removed successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid student profile ID");
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student profile not found");
         }
     }
 }

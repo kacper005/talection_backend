@@ -68,6 +68,9 @@ public class StudentProfileService {
         if (id == null) {
             throw new IllegalArgumentException("ID must not be null");
         }
+        if (!studentProfileRepository.existsById(id)) {
+            throw new UserNotFoundException("Student profile with ID " + id + " does not exist");
+        }
         studentProfileRepository.deleteById(id);
     }
 
