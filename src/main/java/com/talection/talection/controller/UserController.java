@@ -4,6 +4,7 @@ import com.talection.talection.dto.SignUpRequest;
 import com.talection.talection.enums.AuthProvider;
 import com.talection.talection.enums.Role;
 import com.talection.talection.exception.UserAlreadyExistsException;
+import com.talection.talection.exception.UserNotFoundException;
 import com.talection.talection.model.User;
 import com.talection.talection.security.AccessUserDetails;
 import com.talection.talection.service.UserService;
@@ -70,10 +71,33 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
-    @GetMapping("/me")
+    @GetMapping("/get-me")
     public ResponseEntity<User> getCurrentUser() {
         AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userService.getUserByEmail(userDetails.getUsername());
-        return ResponseEntity.ok(user);
+        try {
+            return ResponseEntity.ok(userService.getUserByEmail(userDetails.getUsername()));
+        } catch (IllegalArgumentException e) {
+            logger.error("Error retrieving user: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (UserNotFoundException e) {
+            logger.error("User not found: {}", e.getMessage());
+            return ResponseEntity.status(404).build();
+        }
+    }
+
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
+    @DeleteMapping("/delete-me")
+    public ResponseEntity<String> deleteCurrentUser() {
+        AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            userService.deleteUserByEmail(userDetails.getUsername());
+            return ResponseEntity.ok("User deleted successfully");
+        } catch (IllegalArgumentException e) {
+            logger.error("Error deleting user: {}", e.getMessage());
+            return ResponseEntity.badRequest().body("Invalid user deletion request");
+        } catch (UserNotFoundException e) {
+            logger.error("User not found: {}", e.getMessage());
+            return ResponseEntity.status(404).body("User not found");
+        }
     }
 }

@@ -39,9 +39,13 @@ public class UserService {
             throw new IllegalArgumentException("User and password must not be null or empty");
         }
 
-        if (userRepository.findByEmail(user.getEmail()).isPresent() ||
-            userRepository.findByCredentialId(user.getCredentialId()).isPresent()) {
-            logger.error("User with email {} or Google ID {} already exists", user.getEmail(), user.getCredentialId());
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            logger.error("User with email {} already exists", user.getEmail());
+            throw new UserAlreadyExistsException("User with the same email or Google ID already exists");
+        }
+
+        if (user.getCredentialId() != null && userRepository.findByCredentialId(user.getCredentialId()).isPresent()) {
+            logger.error("User with Google ID {} already exists", user.getCredentialId());
             throw new UserAlreadyExistsException("User with the same email or Google ID already exists");
         }
 
@@ -106,5 +110,22 @@ public class UserService {
         }
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+    }
+
+    /**
+     * Deletes a user by their email.
+     *
+     * @param email the email of the user to delete
+     * @throws IllegalArgumentException if the email is null or empty
+     * @throws UserNotFoundException if the user is not found with the given email
+     */
+    public void deleteUserByEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            logger.error("Email must not be null or empty");
+            throw new IllegalArgumentException("Email must not be null or empty");
+        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+        userRepository.delete(user);
     }
 }
