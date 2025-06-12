@@ -1,6 +1,7 @@
 package com.talection.talection.controller;
 
 import com.talection.talection.dto.SignUpRequest;
+import com.talection.talection.dto.UpdateUserRequest;
 import com.talection.talection.enums.AuthProvider;
 import com.talection.talection.enums.Role;
 import com.talection.talection.exception.UserAlreadyExistsException;
@@ -30,6 +31,12 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * Endpoint to add a new user.
+     *
+     * @param signUpRequest the request containing user details
+     * @return ResponseEntity indicating success or failure
+     */
     @PostMapping("/add")
     public ResponseEntity<String> addUser(@RequestBody SignUpRequest signUpRequest) {
         if (signUpRequest == null) {
@@ -70,6 +77,11 @@ public class UserController {
         return ResponseEntity.badRequest().body("Unsupported authentication provider");
     }
 
+    /**
+     * Endpoint to retrieve the current user's details.
+     *
+     * @return ResponseEntity containing the current user's details or an error status
+     */
     @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     @GetMapping("/get-me")
     public ResponseEntity<User> getCurrentUser() {
@@ -85,6 +97,48 @@ public class UserController {
         }
     }
 
+    /**
+     * Endpoint to update the current user's details.
+     *
+     * @param request the request containing updated user details
+     * @return ResponseEntity indicating success or failure
+     */
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
+    @PutMapping("/update-me")
+    public ResponseEntity<String> updateCurrentUser(@RequestBody UpdateUserRequest request) {
+        if (request == null) {
+            return ResponseEntity.badRequest().body("Update request cannot be null");
+        }
+        if (request.getFirstName() == null || request.getFirstName().isEmpty()) {
+            return ResponseEntity.badRequest().body("First name must not be null or empty");
+        }
+        if (request.getLastName() == null || request.getLastName().isEmpty()) {
+            return ResponseEntity.badRequest().body("Last name must not be null or empty");
+        }
+        if (request.getGender() == null) {
+            return ResponseEntity.badRequest().body("Gender must not be null");
+        }
+
+        AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        try {
+            userService.updateUser(request, userDetails.getId());
+            logger.info("User updated successfully with id: {}", userDetails.getId());
+            return ResponseEntity.ok("User updated successfully");
+        } catch (IllegalArgumentException e) {
+            logger.error("Error updating user: {}", e.getMessage());
+            return ResponseEntity.badRequest().body("Invalid update request");
+        } catch (UserNotFoundException e) {
+            logger.error("User not found: {}", e.getMessage());
+            return ResponseEntity.status(404).body("User not found");
+        }
+    }
+
+    /**
+     * Endpoint to delete the current user.
+     *
+     * @return ResponseEntity indicating success or failure
+     */
     @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     @DeleteMapping("/delete-me")
     public ResponseEntity<String> deleteCurrentUser() {

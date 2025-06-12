@@ -1,5 +1,6 @@
 package com.talection.talection.service;
 
+import com.talection.talection.dto.UpdateUserRequest;
 import com.talection.talection.enums.AuthProvider;
 import com.talection.talection.enums.Role;
 import com.talection.talection.exception.UserAlreadyExistsException;
@@ -54,6 +55,41 @@ public class UserService {
         } else {
             user.setPassword(null); // No password for OAuth users
         }
+
+        userRepository.save(user);
+    }
+
+    /**
+     * Updates an existing user.
+     *
+     * @param request the request containing updated user information
+     * @param id      the ID of the user to update
+     * @throws UserNotFoundException if the user with the given ID does not exist
+     */
+    public void updateUser(UpdateUserRequest request, Long id) {
+        if (id == null) {
+            logger.error("User ID must not be null");
+            throw new IllegalArgumentException("User ID must not be null");
+        }
+        if (request.getFirstName() == null || request.getFirstName().isEmpty()) {
+            logger.error("First name must not be null or empty");
+            throw new IllegalArgumentException("First name must not be null or empty");
+        }
+        if (request.getLastName() == null || request.getLastName().isEmpty()) {
+            logger.error("Last name must not be null or empty");
+            throw new IllegalArgumentException("Last name must not be null or empty");
+        }
+        if (request.getGender() == null) {
+            logger.error("Gender must not be null");
+            throw new IllegalArgumentException("Gender must not be null");
+        }
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
+
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setGender(request.getGender());
 
         userRepository.save(user);
     }
