@@ -1,6 +1,7 @@
 package com.talection.talection.service;
 
 import com.talection.talection.dto.AddStudentProfileRequest;
+import com.talection.talection.exception.StudyProgramNotFoundException;
 import com.talection.talection.exception.UserAlreadyExistsException;
 import com.talection.talection.exception.UserNotFoundException;
 import com.talection.talection.model.StudentProfile;
@@ -14,9 +15,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class StudentProfileService {
     private final StudentProfileRepository studentProfileRepository;
+    private final StudyProgramService studyProgramService;
 
-    public StudentProfileService(StudentProfileRepository studentProfileRepository) {
+    public StudentProfileService(StudentProfileRepository studentProfileRepository, StudyProgramService studyProgramService) {
         this.studentProfileRepository = studentProfileRepository;
+        this.studyProgramService = studyProgramService;
     }
 
     /**
@@ -48,9 +51,37 @@ public class StudentProfileService {
         if (userId == null) {
             throw new IllegalArgumentException("User ID must not be null");
         }
+        if (!studyProgramService.existsById(request.getStudyProgramId())) {
+            throw new StudyProgramNotFoundException("Study program with ID " + request.getStudyProgramId() + " does not exist");
+        }
 
         StudentProfile studentProfile = new StudentProfile();
         studentProfile.setId(userId);
+        studentProfile.setStudyProgramId(request.getStudyProgramId());
+        studentProfile.setYearOfStudy(request.getYearOfStudy());
+        studentProfileRepository.save(studentProfile);
+    }
+
+    /**
+     * Updates an existing student profile.
+     *
+     * @param request the updated student profile request
+     * @param userId the ID of the user updating the student profile
+     * @throws IllegalArgumentException if the request or user ID is null
+     * @throws StudyProgramNotFoundException if the study program does not exist
+     */
+    public void updateStudentProfile(AddStudentProfileRequest request, Long userId) {
+        if (request == null) {
+            throw new IllegalArgumentException("Student profile request must not be null");
+        }
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID must not be null");
+        }
+        if (!studyProgramService.existsById(request.getStudyProgramId())) {
+            throw new StudyProgramNotFoundException("Study program with ID " + request.getStudyProgramId() + " does not exist");
+        }
+
+        StudentProfile studentProfile = getStudentProfile(userId);
         studentProfile.setStudyProgramId(request.getStudyProgramId());
         studentProfile.setYearOfStudy(request.getYearOfStudy());
         studentProfileRepository.save(studentProfile);

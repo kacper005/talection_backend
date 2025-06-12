@@ -1,6 +1,7 @@
 package com.talection.talection.controller;
 
 import com.talection.talection.dto.AddStudentProfileRequest;
+import com.talection.talection.exception.StudyProgramNotFoundException;
 import com.talection.talection.exception.UserAlreadyExistsException;
 import com.talection.talection.exception.UserNotFoundException;
 import com.talection.talection.model.StudentProfile;
@@ -58,6 +59,10 @@ public class StudentProfileController {
         if (request == null) {
             return ResponseEntity.badRequest().body("Student profile request cannot be null");
         }
+        if (request.getStudyProgramId() == null) {
+            return ResponseEntity.badRequest().body("Study program ID");
+        }
+
         AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         try {
@@ -65,6 +70,32 @@ public class StudentProfileController {
             return ResponseEntity.ok("Student profile added successfully");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid student profile request");
+        } catch (StudyProgramNotFoundException e) {
+            return ResponseEntity.badRequest().body("Study program with the given ID does not exist");
+        }
+    }
+
+    /**
+     * Updates the student profile for the currently authenticated user.
+     *
+     * @param request the request containing updated student profile details
+     * @return ResponseEntity indicating success or failure
+     */
+    @PutMapping("/update")
+    @PreAuthorize("hasAuthority('STUDENT')")
+    public ResponseEntity<String> updateStudentProfileForCurrentAuthenticatedUser(@RequestBody AddStudentProfileRequest request) {
+        if (request == null) {
+            return ResponseEntity.badRequest().body("Student profile request cannot be null");
+        }
+        AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        try {
+            studentProfileService.updateStudentProfile(request, userDetails.getId());
+            return ResponseEntity.ok("Student profile updated successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Invalid student profile request");
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Student profile not found");
         }
     }
 

@@ -102,6 +102,20 @@ public class StudyProgramService {
     }
 
     /**
+     * Checks if a study program exists by its ID.
+     *
+     * @param id the ID of the study program
+     * @return true if the study program exists, false otherwise
+     * @throws IllegalArgumentException if the ID is null
+     */
+    public boolean existsById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID must not be null");
+        }
+        return studyProgramRepository.existsById(id);
+    }
+
+    /**
      * Retrieves all study programs.
      *
      * @return a collection of all study programs
