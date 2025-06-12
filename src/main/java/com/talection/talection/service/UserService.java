@@ -36,7 +36,7 @@ public class UserService {
      * @param password the password for the user
      * @throws UserAlreadyExistsException if a user with the same email or google ID already exists
      */
-    public void addUser(User user, String password) throws UserAlreadyExistsException {
+    public Long addUser(User user, String password) throws UserAlreadyExistsException {
         if (password == null || password.isEmpty() || user == null) {
             logger.error("Invalid user or password provided");
             throw new IllegalArgumentException("User and password must not be null or empty");
@@ -59,6 +59,7 @@ public class UserService {
         }
 
         userRepository.save(user);
+        return user.getId();
     }
 
     /**
@@ -174,5 +175,24 @@ public class UserService {
      */
     public Collection<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    /**
+     * Updates the role of a user.
+     *
+     * @param id   the ID of the user to update
+     * @param role the new role to assign to the user
+     * @throws IllegalArgumentException if the ID or role is null
+     * @throws UserNotFoundException if the user with the given ID does not exist
+     */
+    public void updateUserRole(Long id, Role role) {
+        if (id == null || role == null) {
+            logger.error("ID and role must not be null");
+            throw new IllegalArgumentException("ID and role must not be null");
+        }
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
+        user.setRole(role);
+        userRepository.save(user);
     }
 }

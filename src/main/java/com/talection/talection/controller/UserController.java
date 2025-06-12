@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -63,9 +64,9 @@ public class UserController {
                 user.setEmail(signUpRequest.getEmail());
                 user.setGender(signUpRequest.getGender());
 
-                userService.addUser(user, signUpRequest.getPassword());
-                logger.info("User added successfully with email: {}", signUpRequest.getEmail());
-                return ResponseEntity.ok("User added successfully");
+                Long id = userService.addUser(user, signUpRequest.getPassword());
+                logger.info("User added successfully with id: {}", id);
+                return ResponseEntity.ok(id.toString());
             } catch (IllegalArgumentException e) {
                 return ResponseEntity.badRequest().body("Invalid sign-up request");
             } catch (UserAlreadyExistsException e) {
@@ -171,6 +172,37 @@ public class UserController {
         } catch (Exception e) {
             logger.error("Error retrieving users: {}", e.getMessage());
             return ResponseEntity.status(500).build();
+        }
+    }
+
+    /**
+     * Endpoint to update a user's role. This endpoint is restricted to users with ADMIN authority.
+     *
+     * @param id the ID of the user to update
+     * @param role the new role to assign to the user
+     * @return ResponseEntity indicating success or failure
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/update-role/{id}")
+    public ResponseEntity<String> updateRole(@PathVariable Long id, @RequestBody Role role) {
+        if (id == null || role == null) {
+            return ResponseEntity.badRequest().body("ID and role must not be null");
+        }
+        AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (Objects.equals(userDetails.getId(), id)) {
+            return ResponseEntity.badRequest().body("Cannot update your own role");
+        }
+
+        try {
+            userService.updateUserRole(id, role);
+            logger.info("User role updated successfully for user ID: {}", id);
+            return ResponseEntity.ok("User role updated successfully");
+        } catch (IllegalArgumentException e) {
+            logger.error("Error updating user role: {}", e.getMessage());
+            return ResponseEntity.badRequest().body("Invalid user ID or role");
+        } catch (UserNotFoundException e) {
+            logger.error("User not found: {}", e.getMessage());
+            return ResponseEntity.status(404).body("User not found");
         }
     }
 }
