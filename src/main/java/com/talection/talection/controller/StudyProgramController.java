@@ -1,6 +1,6 @@
 package com.talection.talection.controller;
 
-import com.talection.talection.dto.AddStudyProfileRequest;
+import com.talection.talection.dto.AddStudyProgramRequest;
 import com.talection.talection.exception.StudyProgramNotFoundException;
 import com.talection.talection.model.StudyProgram;
 import com.talection.talection.service.StudyProgramService;
@@ -54,7 +54,7 @@ public class StudyProgramController {
      */
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> addStudyProgram(@RequestBody AddStudyProfileRequest addStudyProfileRequest) {
+    public ResponseEntity<String> addStudyProgram(@RequestBody AddStudyProgramRequest addStudyProfileRequest) {
         if (addStudyProfileRequest == null) {
             return ResponseEntity.badRequest().body("Study program request cannot be null");
         }
@@ -66,6 +66,35 @@ public class StudyProgramController {
         } catch (IllegalArgumentException e) {
             logger.error("Error adding study program: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    /**
+     * Updates an existing study program by its ID. This endpoint is restricted to users with ADMIN authority.
+     *
+     * @param id the ID of the study program to update
+     * @param addStudyProfileRequest the request containing updated study program details
+     * @return ResponseEntity indicating success or failure
+     */
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> updateStudyProgram(
+            @PathVariable(value = "id", required = true) Long id,
+            @RequestBody AddStudyProgramRequest addStudyProfileRequest) {
+        if (id == null || addStudyProfileRequest == null) {
+            return ResponseEntity.badRequest().body("ID and study program request must not be null");
+        }
+
+        try {
+            studyProgramService.updateStudyProgram(addStudyProfileRequest, id);
+            logger.info("Study program updated successfully with ID: {}", id);
+            return ResponseEntity.ok("Study program updated successfully");
+        } catch (IllegalArgumentException e) {
+            logger.error("Error updating study program: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (StudyProgramNotFoundException e) {
+            logger.error("Study program not found: {}", e.getMessage());
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 

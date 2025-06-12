@@ -1,7 +1,6 @@
 package com.talection.talection.service;
 
-import com.talection.talection.dto.AddStudentProfileRequest;
-import com.talection.talection.dto.AddStudyProfileRequest;
+import com.talection.talection.dto.AddStudyProgramRequest;
 import com.talection.talection.exception.StudyProgramNotFoundException;
 import com.talection.talection.model.StudyProgram;
 import com.talection.talection.repository.StudyProgramRepository;
@@ -38,7 +37,7 @@ public class StudyProgramService {
      * @param request the study program to add
      * @throws IllegalArgumentException if the study program or its fields are null
      */
-    public void addStudyProgram(AddStudyProfileRequest request) {
+    public void addStudyProgram(AddStudyProgramRequest request) {
         if (request == null) {
             throw new IllegalArgumentException("Study program must not be null");
         }
@@ -51,6 +50,37 @@ public class StudyProgramService {
         studyProgram.setCampus(request.getCampus());
         studyProgram.setStudyLevel(request.getStudyLevel());
 
+        studyProgramRepository.save(studyProgram);
+    }
+
+    /**
+     * Updates an existing study program.
+     *
+     * @param request the updated study program details
+     * @param id      the ID of the study program to update
+     * @throws IllegalArgumentException if the ID is null or any field in the request is invalid
+     * @throws StudyProgramNotFoundException if the study program with the specified ID does not exist
+     */
+    public void updateStudyProgram(AddStudyProgramRequest request, Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID must not be null");
+        }
+        if (request.getCampus() == null) {
+            throw new IllegalArgumentException("Campus must not be null");
+        }
+        if (request.getStudyLevel() == null) {
+            throw new IllegalArgumentException("Study level must not be null");
+        }
+        if (request.getName() == null || request.getName().isEmpty()) {
+            throw new IllegalArgumentException("Name must not be null or empty");
+        }
+
+        StudyProgram studyProgram = studyProgramRepository.findById(id)
+                .orElseThrow(() -> new StudyProgramNotFoundException("Study program with ID " + id + " does not exist"));
+
+        studyProgram.setName(request.getName());
+        studyProgram.setCampus(request.getCampus());
+        studyProgram.setStudyLevel(request.getStudyLevel());
         studyProgramRepository.save(studyProgram);
     }
 

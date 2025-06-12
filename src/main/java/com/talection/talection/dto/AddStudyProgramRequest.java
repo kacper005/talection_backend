@@ -3,7 +3,7 @@ package com.talection.talection.dto;
 import com.talection.talection.enums.Campus;
 import com.talection.talection.enums.StudyLevel;
 
-public class AddStudyProfileRequest {
+public class AddStudyProgramRequest {
     private String name;
     private Campus campus;
     private StudyLevel studyLevel;
