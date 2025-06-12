@@ -37,7 +37,7 @@ public class StudyProgramService {
      * @param request the study program to add
      * @throws IllegalArgumentException if the study program or its fields are null
      */
-    public void addStudyProgram(AddStudyProgramRequest request) {
+    public Long addStudyProgram(AddStudyProgramRequest request) {
         if (request == null) {
             throw new IllegalArgumentException("Study program must not be null");
         }
@@ -51,6 +51,7 @@ public class StudyProgramService {
         studyProgram.setStudyLevel(request.getStudyLevel());
 
         studyProgramRepository.save(studyProgram);
+        return studyProgram.getId();
     }
 
     /**

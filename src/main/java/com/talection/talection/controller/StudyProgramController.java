@@ -60,9 +60,9 @@ public class StudyProgramController {
         }
 
         try {
-            studyProgramService.addStudyProgram(addStudyProfileRequest);
+            Long id = studyProgramService.addStudyProgram(addStudyProfileRequest);
             logger.info("Study program added successfully: {}", addStudyProfileRequest.getName());
-            return ResponseEntity.ok("Study program added successfully");
+            return ResponseEntity.ok(id.toString());
         } catch (IllegalArgumentException e) {
             logger.error("Error adding study program: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
