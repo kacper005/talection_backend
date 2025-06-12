@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 /**
  * Service class for managing users.
  */
@@ -163,5 +165,14 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
         userRepository.delete(user);
+    }
+
+    /**
+     * Retrieves all users in the system.
+     *
+     * @return a collection of all users
+     */
+    public Collection<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

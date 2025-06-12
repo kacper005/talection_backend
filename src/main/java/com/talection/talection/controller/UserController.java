@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.Optional;
 
 
@@ -152,6 +153,24 @@ public class UserController {
         } catch (UserNotFoundException e) {
             logger.error("User not found: {}", e.getMessage());
             return ResponseEntity.status(404).body("User not found");
+        }
+    }
+
+    /**
+     * Endpoint to retrieve all users. This endpoint is restricted to users with ADMIN authority.
+     *
+     * @return ResponseEntity containing a collection of users or an error status
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/get-all")
+    public ResponseEntity<Collection<User>> getAllUsers() {
+        try {
+            Collection<User> users = userService.getAllUsers();
+            logger.info("Retrieved all users successfully");
+            return ResponseEntity.ok(users);
+        } catch (Exception e) {
+            logger.error("Error retrieving users: {}", e.getMessage());
+            return ResponseEntity.status(500).build();
         }
     }
 }
