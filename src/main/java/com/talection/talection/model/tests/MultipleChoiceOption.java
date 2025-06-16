@@ -1,12 +1,14 @@
 package com.talection.talection.model.tests;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
-public class MultipleChoiceOption implements TestOption {
+@DiscriminatorValue("multiple_choice")
+public class MultipleChoiceOption extends TestOption {
 
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)

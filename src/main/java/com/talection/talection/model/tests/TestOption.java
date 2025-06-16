@@ -1,9 +1,21 @@
 package com.talection.talection.model.tests;
 
-/**
- * Interface representing a test option.
- * This interface is used to define the structure of a test option entity.
- */
-public interface TestOption {
-    Long getId();
+import jakarta.persistence.*;
+
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "option_type")
+public abstract class TestOption {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

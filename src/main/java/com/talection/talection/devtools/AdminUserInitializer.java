@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent> {
     private final UserService userService;
     Dotenv dotenv = Dotenv.load();
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final Logger logger = LoggerFactory.getLogger(AdminUserInitializer.class);
 
 
     public AdminUserInitializer(UserService userService) {

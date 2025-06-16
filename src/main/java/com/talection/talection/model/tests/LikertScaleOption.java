@@ -1,12 +1,14 @@
 package com.talection.talection.model.tests;
 
 import com.talection.talection.exception.LikertScaleOutOfBoundsException;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 @Entity
-public class LikertScaleOption implements TestOption {
+@DiscriminatorValue("likert_scale")
+public class LikertScaleOption extends TestOption {
 
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)

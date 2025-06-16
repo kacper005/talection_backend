@@ -17,7 +17,11 @@ public class TestTemplate {
     @NotBlank
     private String name;
 
+    @NotBlank
+    private String description;
+
     @NotNull
+    @Column(unique = true)
     private TestType testType;
 
     @ManyToMany
@@ -57,5 +61,13 @@ public class TestTemplate {
 
     public List<TestQuestion> getQuestions() {
         return questions;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }
