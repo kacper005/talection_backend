@@ -1,9 +1,7 @@
-package com.talection.talection.repository;
+package com.talection.talection.repository.userrelated;
 
-import com.talection.talection.model.StudentProfile;
+import com.talection.talection.model.userrelated.StudentProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Optional;
 
 public interface StudentProfileRepository extends JpaRepository<StudentProfile, Long> {
 }

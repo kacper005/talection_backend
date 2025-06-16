@@ -1,9 +1,9 @@
-package com.talection.talection.service;
+package com.talection.talection.service.userrelated;
 
 import com.talection.talection.dto.AddStudyProgramRequest;
 import com.talection.talection.exception.StudyProgramNotFoundException;
-import com.talection.talection.model.StudyProgram;
-import com.talection.talection.repository.StudyProgramRepository;
+import com.talection.talection.model.userrelated.StudyProgram;
+import com.talection.talection.repository.userrelated.StudyProgramRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;

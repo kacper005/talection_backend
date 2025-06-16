@@ -1,11 +1,10 @@
-package com.talection.talection.service;
+package com.talection.talection.service.userrelated;
 
 import com.talection.talection.dto.AddStudentProfileRequest;
 import com.talection.talection.exception.StudyProgramNotFoundException;
-import com.talection.talection.exception.UserAlreadyExistsException;
 import com.talection.talection.exception.UserNotFoundException;
-import com.talection.talection.model.StudentProfile;
-import com.talection.talection.repository.StudentProfileRepository;
+import com.talection.talection.model.userrelated.StudentProfile;
+import com.talection.talection.repository.userrelated.StudentProfileRepository;
 import org.springframework.stereotype.Service;
 
 /**

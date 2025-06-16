@@ -1,4 +1,4 @@
-package com.talection.talection.controller;
+package com.talection.talection.controller.userrelated;
 
 import com.talection.talection.dto.SignUpRequest;
 import com.talection.talection.dto.UpdateUserRequest;
@@ -6,10 +6,9 @@ import com.talection.talection.enums.AuthProvider;
 import com.talection.talection.enums.Role;
 import com.talection.talection.exception.UserAlreadyExistsException;
 import com.talection.talection.exception.UserNotFoundException;
-import com.talection.talection.model.User;
+import com.talection.talection.model.userrelated.User;
 import com.talection.talection.security.AccessUserDetails;
-import com.talection.talection.service.UserService;
-import jakarta.persistence.Access;
+import com.talection.talection.service.userrelated.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.Objects;
-import java.util.Optional;
 
 
 @RestController

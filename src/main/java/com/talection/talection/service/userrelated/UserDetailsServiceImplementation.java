@@ -1,7 +1,7 @@
-package com.talection.talection.service;
+package com.talection.talection.service.userrelated;
 
-import com.talection.talection.model.User;
-import com.talection.talection.repository.UserRepository;
+import com.talection.talection.model.userrelated.User;
+import com.talection.talection.repository.userrelated.UserRepository;
 import com.talection.talection.security.AccessUserDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

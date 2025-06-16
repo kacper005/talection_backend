@@ -1,11 +1,9 @@
-package com.talection.talection.repository;
+package com.talection.talection.repository.userrelated;
 
 import com.talection.talection.enums.Campus;
 import com.talection.talection.enums.StudyLevel;
-import com.talection.talection.model.StudyProgram;
+import com.talection.talection.model.userrelated.StudyProgram;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.function.Function;
 
 public interface StudyProgramRepository extends JpaRepository<StudyProgram, Long> {
     public StudyProgram findByStudyLevelAndCampus(StudyLevel studyLevel, Campus campus);

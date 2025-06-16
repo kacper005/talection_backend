@@ -1,9 +1,9 @@
-package com.talection.talection.controller;
+package com.talection.talection.controller.userrelated;
 
 import com.talection.talection.dto.AddStudyProgramRequest;
 import com.talection.talection.exception.StudyProgramNotFoundException;
-import com.talection.talection.model.StudyProgram;
-import com.talection.talection.service.StudyProgramService;
+import com.talection.talection.model.userrelated.StudyProgram;
+import com.talection.talection.service.userrelated.StudyProgramService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

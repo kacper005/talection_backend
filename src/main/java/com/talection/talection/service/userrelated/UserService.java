@@ -1,12 +1,12 @@
-package com.talection.talection.service;
+package com.talection.talection.service.userrelated;
 
 import com.talection.talection.dto.UpdateUserRequest;
 import com.talection.talection.enums.AuthProvider;
 import com.talection.talection.enums.Role;
 import com.talection.talection.exception.UserAlreadyExistsException;
 import com.talection.talection.exception.UserNotFoundException;
-import com.talection.talection.model.User;
-import com.talection.talection.repository.UserRepository;
+import com.talection.talection.model.userrelated.User;
+import com.talection.talection.repository.userrelated.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;

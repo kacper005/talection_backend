@@ -1,6 +1,6 @@
-package com.talection.talection.repository;
+package com.talection.talection.repository.userrelated;
 
-import com.talection.talection.model.User;
+import com.talection.talection.model.userrelated.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

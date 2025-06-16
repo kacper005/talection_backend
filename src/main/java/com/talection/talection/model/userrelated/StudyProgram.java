@@ -1,4 +1,4 @@
-package com.talection.talection.model;
+package com.talection.talection.model.userrelated;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.talection.talection.enums.Campus;

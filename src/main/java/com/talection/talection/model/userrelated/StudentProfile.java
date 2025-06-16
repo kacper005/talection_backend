@@ -1,4 +1,4 @@
-package com.talection.talection.model;
+package com.talection.talection.model.userrelated;
 
 import com.talection.talection.enums.StudyLevel;
 import jakarta.persistence.Entity;

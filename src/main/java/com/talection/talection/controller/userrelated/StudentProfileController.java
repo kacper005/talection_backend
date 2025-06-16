@@ -1,13 +1,11 @@
-package com.talection.talection.controller;
+package com.talection.talection.controller.userrelated;
 
 import com.talection.talection.dto.AddStudentProfileRequest;
 import com.talection.talection.exception.StudyProgramNotFoundException;
-import com.talection.talection.exception.UserAlreadyExistsException;
 import com.talection.talection.exception.UserNotFoundException;
-import com.talection.talection.model.StudentProfile;
-import com.talection.talection.model.User;
+import com.talection.talection.model.userrelated.StudentProfile;
 import com.talection.talection.security.AccessUserDetails;
-import com.talection.talection.service.StudentProfileService;
+import com.talection.talection.service.userrelated.StudentProfileService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

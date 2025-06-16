@@ -1,6 +1,6 @@
 package com.talection.talection.security;
 
-import com.talection.talection.model.User;
+import com.talection.talection.model.userrelated.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
