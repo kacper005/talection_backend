@@ -1,6 +1,6 @@
 package com.talection.talection.devtools;
+import com.talection.talection.enums.TestOptionType;
 import com.talection.talection.enums.TestType;
-import com.talection.talection.model.tests.LikertScaleOption;
 import com.talection.talection.model.tests.TestOption;
 import com.talection.talection.model.tests.TestQuestion;
 import com.talection.talection.model.tests.TestTemplate;
@@ -50,22 +50,33 @@ public class TestInitializer implements ApplicationListener<ApplicationReadyEven
         big5.setDescription("Big Five Personality Test");
         big5.setTestType(TestType.BIG_5);
 
-        LikertScaleOption stronglyDisagree = new LikertScaleOption();
+        TestOption stronglyDisagree = new TestOption();
         stronglyDisagree.setAgreementLevel(1);
-        LikertScaleOption disagree = new LikertScaleOption();
-        disagree.setAgreementLevel(2);
-        LikertScaleOption neutral = new LikertScaleOption();
-        neutral.setAgreementLevel(3);
-        LikertScaleOption agree = new LikertScaleOption();
-        agree.setAgreementLevel(4);
-        LikertScaleOption stronglyAgree = new LikertScaleOption();
-        stronglyAgree.setAgreementLevel(5);
+        stronglyDisagree.setType(TestOptionType.LIKERT_SCALE);
+        stronglyDisagree = testOptionRepository.save(stronglyDisagree);
 
-        testOptionRepository.saveAll(
-            List.of(stronglyDisagree, disagree, neutral, agree, stronglyAgree)
-        );
+        TestOption disagree = new TestOption();
+        disagree.setAgreementLevel(2);
+        disagree.setType(TestOptionType.LIKERT_SCALE);
+        disagree = testOptionRepository.save(disagree);
+
+        TestOption neutral = new TestOption();
+        neutral.setAgreementLevel(3);
+        neutral.setType(TestOptionType.LIKERT_SCALE);
+        neutral = testOptionRepository.save(neutral);
+
+        TestOption agree = new TestOption();
+        agree.setAgreementLevel(4);
+        agree.setType(TestOptionType.LIKERT_SCALE);
+        agree = testOptionRepository.save(agree);
+
+        TestOption stronglyAgree = new TestOption();
+        stronglyAgree.setAgreementLevel(5);
+        stronglyAgree.setType(TestOptionType.LIKERT_SCALE);
+        stronglyAgree = testOptionRepository.save(stronglyAgree);
 
         List<TestOption> options = List.of(stronglyDisagree, disagree, neutral, agree, stronglyAgree);
+        testOptionRepository.saveAll(options);
 
 
         TestQuestion question1 = new TestQuestion();

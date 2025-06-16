@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Allow only GET requests
                         .requestMatchers(
-                                HttpMethod.GET
+                                HttpMethod.GET, "/test/get-all"
                         ).permitAll()
                         // Allow all requests
                         .requestMatchers("/user/add", "/authenticate"

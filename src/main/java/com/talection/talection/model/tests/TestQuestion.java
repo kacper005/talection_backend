@@ -1,5 +1,6 @@
 package com.talection.talection.model.tests;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -19,6 +20,7 @@ public class TestQuestion {
     private List<TestOption> options;
 
     @ManyToMany
+    @JsonIgnore
     private List<TestOption> correctOptions;
 
     public TestQuestion() {
