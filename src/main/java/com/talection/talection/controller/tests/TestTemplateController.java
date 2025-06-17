@@ -7,6 +7,7 @@ import com.talection.talection.service.tests.TestTemplateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -90,6 +91,7 @@ public class TestTemplateController {
      * @return ResponseEntity indicating success or failure
      */
     @PutMapping("/update-description/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> updateTestTemplateDescription(@PathVariable Long id, @RequestBody String description) {
         if (id == null || description == null || description.isEmpty()) {
             return ResponseEntity.badRequest().body("ID and description must not be null or empty");
