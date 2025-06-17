@@ -87,9 +87,6 @@ public class AuthController {
             } catch (UserNotFoundException e) {
                 logger.error("User not found with Google ID: {}", request.getCredentialId());
                 return new ResponseEntity<>("User not found with Google ID: " + request.getCredentialId(), HttpStatus.NOT_FOUND);
-            } catch (Exception e) {
-                logger.error("An error occurred during Google authentication: {}", e.getMessage());
-                return new ResponseEntity<>("An error occurred during Google authentication", HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } else {
             return ResponseEntity.badRequest().body("AuthProvider not provided");

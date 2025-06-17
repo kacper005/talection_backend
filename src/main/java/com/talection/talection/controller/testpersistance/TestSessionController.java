@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
+/**
+ * Controller for managing test sessions.
+ */
 @RestController
 @RequestMapping("/testsessions")
 public class TestSessionController {
@@ -25,6 +28,11 @@ public class TestSessionController {
         this.testSessionService = testSessionService;
     }
 
+    /**
+     * Endpoint to retrieve all test sessions for the current user.
+     *
+     * @return ResponseEntity containing a collection of test sessions
+     */
     @GetMapping()
     @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public ResponseEntity<Collection<TestSession>> getAllTestSessionsForCurrentUser() {
@@ -42,6 +50,12 @@ public class TestSessionController {
         }
     }
 
+    /**
+     * Endpoint to add a new test session for the current user.
+     *
+     * @param testSession the test session to add
+     * @return ResponseEntity indicating success or failure
+     */
     @PostMapping("/add")
     @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
     public ResponseEntity<String> addTestSessionForCurrentUser(@RequestBody TestSession testSession) {

@@ -18,6 +18,11 @@ public class AccessUserDetails implements UserDetails {
     private String password;
     private GrantedAuthority authority;
 
+    /**
+     * Constructs an AccessUserDetails object from a User entity.
+     *
+     * @param user the User entity containing user information
+     */
     public AccessUserDetails(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
@@ -40,6 +45,11 @@ public class AccessUserDetails implements UserDetails {
         return email;
     }
 
+    /**
+     * Returns the users id
+     *
+     * @return the id of the user
+     */
     public Long getId() {
         return id;
     }
