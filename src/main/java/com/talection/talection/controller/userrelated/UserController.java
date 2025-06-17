@@ -181,7 +181,7 @@ public class UserController {
      * @return ResponseEntity indicating success or failure
      */
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/update-role/{id}")
+    @PutMapping("/update-role/{id}")
     public ResponseEntity<String> updateRole(@PathVariable Long id, @RequestBody Role role) {
         if (id == null || role == null) {
             return ResponseEntity.badRequest().body("ID and role must not be null");
