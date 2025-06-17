@@ -49,6 +49,7 @@ public class TestInitializer implements ApplicationListener<ApplicationReadyEven
         big5.setName("BIG-5");
         big5.setDescription("Big Five Personality Test");
         big5.setTestType(TestType.BIG_5);
+        big5.setOptionType(TestOptionType.LIKERT_SCALE);
 
         TestOption stronglyDisagree = new TestOption();
         stronglyDisagree.setAgreementLevel(1);

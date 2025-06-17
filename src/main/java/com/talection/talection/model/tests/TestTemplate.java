@@ -1,5 +1,6 @@
 package com.talection.talection.model.tests;
 
+import com.talection.talection.enums.TestOptionType;
 import com.talection.talection.enums.TestType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -23,6 +24,9 @@ public class TestTemplate {
     @NotNull
     @Column(unique = true)
     private TestType testType;
+
+    @NotNull
+    private TestOptionType optionType;
 
     @ManyToMany
     private List<TestQuestion> questions;
@@ -69,5 +73,13 @@ public class TestTemplate {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setOptionType(TestOptionType optionType) {
+        this.optionType = optionType;
+    }
+
+    public TestOptionType getOptionType() {
+        return optionType;
     }
 }
