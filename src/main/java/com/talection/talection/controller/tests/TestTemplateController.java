@@ -7,10 +7,7 @@ import com.talection.talection.service.tests.TestTemplateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
@@ -85,5 +82,28 @@ public class TestTemplateController {
         }
     }
 
-    //TODO: Put for updating description
+    /**
+     * Endpoint to update the description of a test template.
+     *
+     * @param id the ID of the test template to update
+     * @param description the new description for the test template
+     * @return ResponseEntity indicating success or failure
+     */
+    @PutMapping("/update-description/{id}")
+    public ResponseEntity<String> updateTestTemplateDescription(@PathVariable Long id, @RequestBody String description) {
+        if (id == null || description == null || description.isEmpty()) {
+            return ResponseEntity.badRequest().body("ID and description must not be null or empty");
+        }
+        logger.info("Attempting to update description for test template with ID: {}", id);
+
+        try {
+            testTemplateService.updateTestTemplateDescription(id, description);
+            logger.info("Successfully updated description for test template with ID: {}", id);
+            return ResponseEntity.ok("Description updated successfully");
+        } catch (TestTemplateNotFoundException e) {
+            logger.error("Error updating description for test template with ID {}: {}", id, e.getMessage());
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
 }

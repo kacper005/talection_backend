@@ -57,4 +57,24 @@ public class TestTemplateService {
         return testTemplateRepository.findByTestType(testType)
                 .orElseThrow(() -> new TestTemplateNotFoundException("Test template not found with test type: " + testType));
     }
+
+    /**
+     * Updates the description of a test template.
+     *
+     * @param templateId the ID of the test template to update
+     * @param description the new description for the test template
+     * @throws IllegalArgumentException if the templateId or description is null or empty
+     * @throws TestTemplateNotFoundException if no test template is found with the given ID
+     */
+    public void updateTestTemplateDescription(Long templateId, String description) {
+        if (templateId == null || description == null || description.isEmpty()) {
+            throw new IllegalArgumentException("Template ID and description must not be null or empty");
+        }
+
+        TestTemplate testTemplate = testTemplateRepository.findById(templateId)
+                .orElseThrow(() -> new TestTemplateNotFoundException("Test template not found with ID: " + templateId));
+
+        testTemplate.setDescription(description);
+        testTemplateRepository.save(testTemplate);
+    }
 }
