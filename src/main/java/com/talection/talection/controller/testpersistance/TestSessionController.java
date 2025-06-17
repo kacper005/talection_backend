@@ -1,0 +1,65 @@
+package com.talection.talection.controller.testpersistance;
+
+import com.talection.talection.exception.TestTemplateNotFoundException;
+import com.talection.talection.exception.UserNotFoundException;
+import com.talection.talection.model.testpersistance.TestSession;
+import com.talection.talection.security.AccessUserDetails;
+import com.talection.talection.service.testpersistance.TestSessionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
+
+@RestController
+@RequestMapping("/testsessions")
+public class TestSessionController {
+    private final Logger logger = LoggerFactory.getLogger(TestSessionController.class);
+
+    private final TestSessionService testSessionService;
+
+    public TestSessionController(TestSessionService testSessionService) {
+        this.testSessionService = testSessionService;
+    }
+
+    @GetMapping()
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
+    public ResponseEntity<Collection<TestSession>> getAllTestSessionsForCurrentUser() {
+        AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            Collection<TestSession> testSessions = testSessionService.findAllTestSessionsForUser(userDetails.getId());
+            logger.info("Retrieved {} test sessions for user with ID {}", testSessions.size(), userDetails.getId());
+            return ResponseEntity.ok(testSessions);
+        } catch (IllegalArgumentException e) {
+            logger.error("Error retrieving test sessions for user with ID {}: {}", userDetails.getId(), e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (UserNotFoundException e) {
+            logger.error("User not found with ID {}: {}", userDetails.getId(), e.getMessage());
+            return ResponseEntity.status(404).body(null);
+        }
+    }
+
+    @PostMapping("/add")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
+    public ResponseEntity<String> addTestSessionForCurrentUser(@RequestBody TestSession testSession) {
+        AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        testSession.setUserId(userDetails.getId());
+        try {
+            Long id = testSessionService.addTestSession(testSession);
+            logger.info("Test session added successfully with ID {}", id);
+            return ResponseEntity.ok(id.toString());
+        } catch (IllegalArgumentException e) {
+            logger.error("Error adding test session for user with ID {}: {}", userDetails.getId(), e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (UserNotFoundException e) {
+            logger.error("User not found with ID {}: {}", userDetails.getId(), e.getMessage());
+            return ResponseEntity.status(404).body(e.getMessage());
+        } catch (TestTemplateNotFoundException e) {
+            logger.error("Test template not found for user with ID {}: {}", userDetails.getId(), e.getMessage());
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+}
