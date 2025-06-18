@@ -1,6 +1,6 @@
 package com.talection.talection.controller.userrelated;
 
-import com.talection.talection.dto.AddStudyProgramRequest;
+import com.talection.talection.dto.requests.AddStudyProgramRequest;
 import com.talection.talection.exception.StudyProgramNotFoundException;
 import com.talection.talection.model.userrelated.StudyProgram;
 import com.talection.talection.service.userrelated.StudyProgramService;

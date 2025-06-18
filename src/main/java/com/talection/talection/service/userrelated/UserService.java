@@ -1,6 +1,6 @@
 package com.talection.talection.service.userrelated;
 
-import com.talection.talection.dto.UpdateUserRequest;
+import com.talection.talection.dto.requests.UpdateUserRequest;
 import com.talection.talection.enums.AuthProvider;
 import com.talection.talection.enums.Role;
 import com.talection.talection.exception.UserAlreadyExistsException;
@@ -194,5 +194,22 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
         user.setRole(role);
         userRepository.save(user);
+    }
+
+    /**
+     * Retrieves a user by their ID.
+     *
+     * @param id the ID of the user
+     * @return the user with the specified ID
+     * @throws IllegalArgumentException if the ID is null
+     * @throws UserNotFoundException if the user is not found with the given ID
+     */
+    public User getUserById(Long id) {
+        if (id == null) {
+            logger.error("ID must not be null");
+            throw new IllegalArgumentException("ID must not be null");
+        }
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
     }
 }

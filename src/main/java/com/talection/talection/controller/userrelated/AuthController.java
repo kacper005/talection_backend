@@ -3,7 +3,7 @@ package com.talection.talection.controller.userrelated;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.talection.talection.config.GoogleTokenVerifier;
 import com.talection.talection.config.JwtUtil;
-import com.talection.talection.dto.AuthenticationRequest;
+import com.talection.talection.dto.requests.AuthenticationRequest;
 import com.talection.talection.enums.AuthProvider;
 import com.talection.talection.exception.UserNotFoundException;
 import com.talection.talection.service.userrelated.UserDetailsServiceImplementation;

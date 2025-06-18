@@ -1,4 +1,4 @@
-package com.talection.talection.dto;
+package com.talection.talection.dto.requests;
 
 import com.talection.talection.enums.Gender;
 import jakarta.validation.constraints.NotNull;

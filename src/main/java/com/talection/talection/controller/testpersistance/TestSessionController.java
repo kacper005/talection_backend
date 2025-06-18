@@ -1,5 +1,6 @@
 package com.talection.talection.controller.testpersistance;
 
+import com.talection.talection.dto.replies.TestSessionReply;
 import com.talection.talection.exception.TestTemplateNotFoundException;
 import com.talection.talection.exception.UserNotFoundException;
 import com.talection.talection.model.testpersistance.TestSession;
@@ -43,6 +44,28 @@ public class TestSessionController {
             return ResponseEntity.ok(testSessions);
         } catch (IllegalArgumentException e) {
             logger.error("Error retrieving test sessions for user with ID {}: {}", userDetails.getId(), e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (UserNotFoundException e) {
+            logger.error("User not found with ID {}: {}", userDetails.getId(), e.getMessage());
+            return ResponseEntity.status(404).body(null);
+        }
+    }
+
+    /**
+     * Endpoint to retrieve all test sessions for the current user, formatted for a specific view.
+     *
+     * @return ResponseEntity containing a collection of formatted test sessions
+     */
+    @GetMapping("/formatted")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
+    public ResponseEntity<Collection<TestSessionReply>> getAllFormattedTestSessionsForCurrentUser() {
+        AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            Collection<TestSessionReply> testSessions = testSessionService.getAllTestSessionsForUserFormatted(userDetails.getId());
+            logger.info("Retrieved {} formatted test sessions for user with ID {}", testSessions.size(), userDetails.getId());
+            return ResponseEntity.ok(testSessions);
+        } catch (IllegalArgumentException e) {
+            logger.error("Error retrieving formatted test sessions for user with ID {}: {}", userDetails.getId(), e.getMessage());
             return ResponseEntity.badRequest().build();
         } catch (UserNotFoundException e) {
             logger.error("User not found with ID {}: {}", userDetails.getId(), e.getMessage());

@@ -1,6 +1,6 @@
 package com.talection.talection.controller.userrelated;
 
-import com.talection.talection.dto.AddStudentProfileRequest;
+import com.talection.talection.dto.requests.AddStudentProfileRequest;
 import com.talection.talection.exception.StudyProgramNotFoundException;
 import com.talection.talection.exception.UserNotFoundException;
 import com.talection.talection.model.userrelated.StudentProfile;

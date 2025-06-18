@@ -1,7 +1,7 @@
 package com.talection.talection.controller.userrelated;
 
-import com.talection.talection.dto.SignUpRequest;
-import com.talection.talection.dto.UpdateUserRequest;
+import com.talection.talection.dto.requests.SignUpRequest;
+import com.talection.talection.dto.requests.UpdateUserRequest;
 import com.talection.talection.enums.AuthProvider;
 import com.talection.talection.enums.Role;
 import com.talection.talection.exception.UserAlreadyExistsException;
