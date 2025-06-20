@@ -24,6 +24,7 @@ public class TestTemplate {
     private String name;
 
     @NotBlank
+    @Column(length = 1500)
     private String description;
 
     @NotNull
