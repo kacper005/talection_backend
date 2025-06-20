@@ -99,6 +99,32 @@ public class StudyProgramController {
     }
 
     /**
+     * Retrieves a study program by its ID.
+     *
+     * @param id the ID of the study program to retrieve
+     * @return ResponseEntity containing the study program or an error status
+     */
+    @GetMapping("/get/{id}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
+    public ResponseEntity<StudyProgram> getStudyProgramById(@PathVariable Long id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        try {
+            StudyProgram studyProgram = studyProgramService.getStudyProgram(id);
+            logger.info("Retrieved study program successfully with ID: {}", id);
+            return ResponseEntity.ok(studyProgram);
+        } catch (StudyProgramNotFoundException e) {
+            logger.error("Study program not found: {}", e.getMessage());
+            return ResponseEntity.status(404).body(null);
+        } catch (IllegalArgumentException e) {
+            logger.error("Error retrieving study program: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    /**
      * Deletes a study program by its ID. This endpoint is restricted to users with ADMIN authority.
      *
      * @param id the ID of the study program to delete

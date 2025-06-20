@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Controller for managing test sessions.
@@ -100,5 +101,31 @@ public class TestSessionController {
         }
     }
 
-    //TODO: Add get by ID endpoint for TestSessionController, requires security and data-sharing
+    /**
+     * Endpoint to retrieve a test session by its ID, formatted for a specific view.
+     * The endpoint checks if the test session belongs to the current user before returning it.
+     *
+     * @param id the ID of the test session
+     * @return ResponseEntity containing the formatted test session or an error status
+     */
+    @GetMapping("/formatted/{id}")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
+    public ResponseEntity<TestSessionReply> getTestSessionReplyById(@PathVariable Long id) {
+        AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            TestSessionReply testSessionReply = testSessionService.getTestSessionReplyById(id);
+            if (Objects.equals(testSessionReply.getUserId(), userDetails.getId())) { // Check if the test session belongs to the user
+                return ResponseEntity.ok(testSessionReply);
+            } else {
+                logger.warn("User with ID {} attempted to access test session with ID {} that does not belong to them", userDetails.getId(), id);
+                return ResponseEntity.status(403).build();
+            }
+        } catch (IllegalArgumentException e) {
+            logger.error("Error fetching test session with ID {}: {}", id, e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (TestTemplateNotFoundException e) {
+            logger.error("Test template not found for test session with ID {}: {}", id, e.getMessage());
+            return ResponseEntity.status(404).build();
+        }
+    }
 }

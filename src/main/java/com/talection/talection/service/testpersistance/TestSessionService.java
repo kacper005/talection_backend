@@ -127,7 +127,7 @@ public class TestSessionService {
      * @throws IllegalArgumentException if the id is null
      * @throws  if the test session does not exist
      */
-    private TestSessionReply getTestSessionReplyById(Long id) {
+    public TestSessionReply getTestSessionReplyById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Id must not be null");
         }
@@ -154,6 +154,7 @@ public class TestSessionService {
                         .map(this::convertToChoiceReply)
                         .toList()
         );
+        reply.setUserId(testSession.getUserId());
 
         User user = userService.getUserById(testSession.getUserId());
         reply.setUserEmail(user.getEmail());

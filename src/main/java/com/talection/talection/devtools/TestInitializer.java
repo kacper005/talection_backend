@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -37,6 +38,7 @@ public class TestInitializer implements ApplicationListener<ApplicationReadyEven
     @Override
     public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
         initiateBig5();
+        initiateFluidIntelligence();
     }
 
     private void initiateBig5() {
@@ -298,5 +300,43 @@ public class TestInitializer implements ApplicationListener<ApplicationReadyEven
 
         testTemplateRepository.save(big5);
         logger.info("Big Five Personality Test initialized successfully.");
+    }
+
+    public void initiateFluidIntelligence() {
+        if (testTemplateRepository.findByTestType(TestType.INTELLIGENCE_FLUID).isPresent()) {
+            logger.info("Fluid Intelligence Test already exists, skipping initialization.");
+            return;
+        }
+        logger.info("Initializing Fluid Intelligence Test...");
+        TestTemplate fluidIntelligence = new TestTemplate();
+        fluidIntelligence.setName("Intelligence Fluid");
+        fluidIntelligence.setDescription("Fluid Intelligence Test");
+        fluidIntelligence.setTestType(TestType.INTELLIGENCE_FLUID);
+        fluidIntelligence.setOptionType(TestOptionType.MULTIPLE_CHOICE);
+
+        List<TestQuestion> questions = new ArrayList<>();
+        for (int i = 1; i <= 40; i++) {
+            String[] optionTexts = {"Q"+i+"_OptionA", "Q"+i+"_OptionB", "Q"+i+"_OptionC", "Q"+i+"_OptionD", "Q"+i+"_OptionE", "Q"+i+"_OptionF"};
+            List<TestOption> options = new ArrayList<>();
+            for (String optionText : optionTexts) {
+                TestOption option = new TestOption();
+                option.setOptionText(optionText);
+                option.setType(TestOptionType.MULTIPLE_CHOICE);
+                option = testOptionRepository.save(option);
+                options.add(option);
+            }
+            TestQuestion question = new TestQuestion();
+            question.setQuestionText("Q" + i + "_Main");
+            question.setOptions(options);
+            question.setCorrectOptions(List.of(options.get(0)));
+            questions.add(question);
+            testQuestionRepository.save(question);
+        }
+
+        testQuestionRepository.saveAll(questions);
+
+        fluidIntelligence.setQuestions(questions);
+        testTemplateRepository.save(fluidIntelligence);
+        logger.info("Fluid Intelligence Test initialized successfully.");
     }
 }
