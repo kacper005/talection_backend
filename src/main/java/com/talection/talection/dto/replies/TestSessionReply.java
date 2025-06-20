@@ -13,6 +13,7 @@ import java.util.List;
  * test metadata, and the choices made during the test.
  */
 public class TestSessionReply {
+    private Long id;
     private Long userId;
     private String userEmail;
     private Role userRole;
@@ -21,6 +22,22 @@ public class TestSessionReply {
     private Date startTime;
     private Date endTime;
     private List<TestChoiceReply> choices;
+
+    /**
+     * Returns the ID of the test session.
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * Sets the ID of the test session.
+     *
+     * @param id the ID to set for the test session
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     /**
      * Gets the email of the user who took the test.

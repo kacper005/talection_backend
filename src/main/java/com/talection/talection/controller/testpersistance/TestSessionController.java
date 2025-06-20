@@ -1,6 +1,7 @@
 package com.talection.talection.controller.testpersistance;
 
 import com.talection.talection.dto.replies.TestSessionReply;
+import com.talection.talection.exception.TestSessionNotFoundException;
 import com.talection.talection.exception.TestTemplateNotFoundException;
 import com.talection.talection.exception.UserNotFoundException;
 import com.talection.talection.model.testpersistance.TestSession;
@@ -126,6 +127,32 @@ public class TestSessionController {
         } catch (TestTemplateNotFoundException e) {
             logger.error("Test template not found for test session with ID {}: {}", id, e.getMessage());
             return ResponseEntity.status(404).build();
+        }
+    }
+
+    /**
+     * Deletes a test session by its ID.
+     *
+     * @param id the ID of the test session to delete
+     * @return ResponseEntity indicating success or failure
+     */
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteTestSessionById(@PathVariable Long id) {
+        AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            TestSessionReply reply = testSessionService.getTestSessionReplyById(id);
+            if (!Objects.equals(reply.getUserId(), userDetails.getId())) {
+                logger.warn("Cannot test session with ID {}: it does not belong to the user with ID {}", id, userDetails.getId());
+                return ResponseEntity.status(403).body("Cannot delete test session you do not own");
+            }
+            testSessionService.deleteTestSession(id);
+            return ResponseEntity.ok("Test session deleted successfully");
+        } catch (IllegalArgumentException e) {
+            logger.error("Error deleting test session with ID {}: {}", id, e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (TestSessionNotFoundException e) {
+            logger.error("Test session not found with ID {}: {}", id, e.getMessage());
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 }

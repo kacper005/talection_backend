@@ -84,6 +84,22 @@ public class TestSessionService {
     }
 
     /**
+     * Deletes a test session by its ID.
+     *
+     * @param id the ID of the test session to delete
+     * @throws IllegalArgumentException if the ID is null
+     * @throws TestSessionNotFoundException if the test session does not exist
+     */
+    public void deleteTestSession(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id must not be null");
+        }
+        TestSession testSession = testSessionRepository.findById(id)
+                .orElseThrow(() -> new TestSessionNotFoundException("TestSession not found with id: " + id));
+        testSessionRepository.delete(testSession);
+    }
+
+    /**
      * Retreives all test sessions for a specific user.
      *
      * @param userId the ID of the user whose test sessions are to be retrieved
@@ -147,6 +163,7 @@ public class TestSessionService {
             return null;
         }
         TestSessionReply reply = new TestSessionReply();
+        reply.setId(testSession.getId());
         reply.setStartTime(testSession.getStartTime());
         reply.setEndTime(testSession.getEndTime());
         reply.setChoices(
