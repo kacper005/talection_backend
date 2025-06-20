@@ -2,6 +2,7 @@ package com.talection.talection.service.datasharing;
 
 import com.talection.talection.dto.replies.TestSessionReply;
 import com.talection.talection.enums.Role;
+import com.talection.talection.model.datasharing.StudentTeacherRelation;
 import com.talection.talection.repository.datasharing.StudentTeacherRelationRepository;
 import com.talection.talection.service.testpersistance.TestSessionService;
 import com.talection.talection.service.userrelated.UserService;
@@ -107,7 +108,7 @@ public class StudentTeacherRelationService {
             throw new IllegalArgumentException("Student ID and Teacher ID must not be null");
         }
 
-        var relation = studentTeacherRelationRepository.findByStudentIdAndTeacherId(studentId, teacherId);
+        StudentTeacherRelation relation = studentTeacherRelationRepository.findByStudentIdAndTeacherId(studentId, teacherId);
         if (relation != null) {
             studentTeacherRelationRepository.delete(relation);
         } else {
