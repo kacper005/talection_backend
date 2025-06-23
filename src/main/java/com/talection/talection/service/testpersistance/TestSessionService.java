@@ -155,6 +155,21 @@ public class TestSessionService {
     }
 
     /**
+     * Evaluates a test session and returns a formatted reply. userId and testSessionId should be null
+     *
+     * @param testSession the test session to evaluate
+     * @return the formatted test session reply
+     * @throws IllegalArgumentException if the testSession is null or has no choices
+     * @throws TestTemplateNotFoundException if the test template associated with the session does not exist
+     */
+    public TestSessionReply evaluateTestSession(TestSession testSession) {
+        if (testSession == null) {
+            throw new IllegalArgumentException("TestSession must not be null");
+        }
+        return convertToReply(testSession);
+    }
+
+    /**
      * Converts a TestSession object into a TestSessionReply object.
      *
      * @param testSession the TestSession object to convert
@@ -181,9 +196,11 @@ public class TestSessionService {
 
         reply.setUserId(testSession.getUserId());
 
-        User user = userService.getUserById(testSession.getUserId());
-        reply.setUserEmail(user.getEmail());
-        reply.setUserRole(user.getRole());
+        if (testSession.getUserId() != null) {
+            User user = userService.getUserById(testSession.getUserId());
+            reply.setUserEmail(user.getEmail());
+            reply.setUserRole(user.getRole());
+        }
 
         TestTemplate testTemplate = testTemplateRepository.findById(testSession.getTestTemplateId())
                 .orElseThrow(() -> new TestTemplateNotFoundException("TestTemplate not found with id: " + testSession.getTestTemplateId()));

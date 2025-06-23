@@ -32,7 +32,7 @@ public class StudentTeacherRelationController {
      * @return ResponseEntity containing the ID of the created relation or an error message
      */
     @PostMapping("/add")
-    @PreAuthorize("hasAuthority('STUDENT')")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER')")
     public ResponseEntity<String> addStudentTeacherRelation(@RequestBody AddStudentTeacherRelationRequest request) {
         AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (request == null || request.getTeacherId() == null || request.getTestSessionId() == null) {

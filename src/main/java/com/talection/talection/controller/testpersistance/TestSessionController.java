@@ -76,6 +76,27 @@ public class TestSessionController {
     }
 
     /**
+     * Open endpoint for unauthorized users to evaluate a test session.
+     *
+     * @param testSession the test session to evaluate
+     * @return ResponseEntity containing the evaluation result
+     */
+    @GetMapping("/evaluate")
+    public ResponseEntity<TestSessionReply> evaluateTestSession(@RequestBody TestSession testSession) {
+        try {
+            TestSessionReply reply = testSessionService.evaluateTestSession(testSession);
+            logger.info("Test session evaluated successfully with ID {}", reply.getId());
+            return ResponseEntity.ok(reply);
+        } catch (IllegalArgumentException e) {
+            logger.error("Error evaluating test session: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(null);
+        } catch (TestTemplateNotFoundException e) {
+            logger.error("Test template not found for evaluation: {}", e.getMessage());
+            return ResponseEntity.status(404).body(null);
+        }
+    }
+
+    /**
      * Endpoint to add a new test session for the current user.
      *
      * @param testSession the test session to add
