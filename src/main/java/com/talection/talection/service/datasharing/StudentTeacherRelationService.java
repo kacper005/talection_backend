@@ -1,13 +1,17 @@
 package com.talection.talection.service.datasharing;
 
+import com.talection.talection.dto.replies.TeacherRelationReply;
+import com.talection.talection.dto.replies.TeacherReply;
 import com.talection.talection.dto.replies.TestSessionReply;
 import com.talection.talection.enums.Role;
 import com.talection.talection.model.datasharing.StudentTeacherRelation;
+import com.talection.talection.model.userrelated.User;
 import com.talection.talection.repository.datasharing.StudentTeacherRelationRepository;
 import com.talection.talection.service.testpersistance.TestSessionService;
 import com.talection.talection.service.userrelated.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -22,6 +26,25 @@ public class StudentTeacherRelationService {
         this.studentTeacherRelationRepository = studentTeacherRelationRepository;
         this.testSessionService = testSessionService;
         this.userService = userService;
+    }
+
+    public Collection<TeacherRelationReply> getTeachersByStudentId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id cannot be null");
+        }
+
+        Collection<StudentTeacherRelation> relations = studentTeacherRelationRepository.findAllByStudentId(id);
+        ArrayList<TeacherRelationReply> replies = new ArrayList<>();
+        for (StudentTeacherRelation relation : relations) {
+            User user = userService.getUserById(relation.getTeacherId());
+            TeacherRelationReply reply = new TeacherRelationReply();
+            reply.setRelationId(relation.getId());
+            reply.setTeacherEmail(user.getEmail());
+            reply.setTeacherName(user.getFirstName());
+            replies.add(reply);
+        }
+
+        return replies;
     }
 
     /**
@@ -64,15 +87,15 @@ public class StudentTeacherRelationService {
     /**
      * Retrieves all test sessions associated with a given teacher ID.
      *
-     * @param teacherId the ID of the teacher
+     * @param userId the ID of the teacher
      * @return a collection of TestSessionReply objects associated with the teacher
      */
-    public Collection<TestSessionReply> getTestSessionsByTeacherId(Long teacherId) {
-        if (teacherId == null) {
+    public Collection<TestSessionReply> getTestSessionsByTeacherIdOrStudentId(Long userId) {
+        if (userId == null) {
             throw new IllegalArgumentException("Teacher ID must not be null");
         }
 
-        return studentTeacherRelationRepository.findAllByTeacherId(teacherId).stream()
+        return studentTeacherRelationRepository.findAllByStudentIdOrTeacherId(userId).stream()
             .map(relation -> testSessionService.getTestSessionReplyById(relation.getTestSessionId()))
             .filter(Objects::nonNull)
             .toList();

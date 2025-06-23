@@ -1,5 +1,6 @@
 package com.talection.talection.controller.userrelated;
 
+import com.talection.talection.dto.replies.TeacherReply;
 import com.talection.talection.dto.requests.SignUpRequest;
 import com.talection.talection.dto.requests.UpdateUserRequest;
 import com.talection.talection.enums.AuthProvider;
@@ -169,6 +170,22 @@ public class UserController {
             return ResponseEntity.ok(users);
         } catch (Exception e) {
             logger.error("Error retrieving users: {}", e.getMessage());
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER', 'ADMIN')")
+    @GetMapping("/teachers")
+    public ResponseEntity<Collection<TeacherReply>> getAllTeachers() {
+        try {
+            Collection<TeacherReply> teachers = userService.getAllTeachers();
+            logger.info("Retrieved all teachers successfully");
+            return ResponseEntity.ok(teachers);
+        } catch (IllegalArgumentException e) {
+            logger.error("Error retrieving teachers: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            logger.error("Unexpected error while retrieving teachers: {}", e.getMessage());
             return ResponseEntity.status(500).build();
         }
     }

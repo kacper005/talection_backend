@@ -1,5 +1,6 @@
 package com.talection.talection.controller.datasharing;
 
+import com.talection.talection.dto.replies.TeacherRelationReply;
 import com.talection.talection.dto.replies.TestSessionReply;
 import com.talection.talection.dto.requests.AddStudentTeacherRelationRequest;
 import com.talection.talection.security.AccessUserDetails;
@@ -52,18 +53,36 @@ public class StudentTeacherRelationController {
         }
     }
 
+    @GetMapping("/teachers")
+    @PreAuthorize("hasAuthority('STUDENT')")
+    public ResponseEntity<Collection<TeacherRelationReply>> getTeachersForStudent() {
+        AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        try {
+            Collection<TeacherRelationReply> relations = studentTeacherRelationService.getTeachersByStudentId(userDetails.getId());
+            logger.info("Successfully retrieved teachers for student with ID: {}", userDetails.getId());
+            return ResponseEntity.ok(relations);
+        } catch (IllegalArgumentException e) {
+            logger.error("Error retrieving teachers for student with ID {}: {}", userDetails.getId(), e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            logger.error("Unexpected error while retrieving teachers for student with ID {}: {}", userDetails.getId(), e.getMessage());
+            return ResponseEntity.status(500).build();
+        }
+    }
+
     /**
      * Retrieves all test sessions for the currently authenticated teacher.
      *
      * @return ResponseEntity containing a collection of TestSessionReply objects
      */
-    @GetMapping()
-    @PreAuthorize("hasAuthority('TEACHER')")
+    @GetMapping("/testSessions")
+    @PreAuthorize("hasAnyAuthority('TEACHER', 'STUDENT')")
     public ResponseEntity<Collection<TestSessionReply>> getTestSessionsForUsers() {
         AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         try {
-            Collection<TestSessionReply> testSessionReply = studentTeacherRelationService.getTestSessionsByTeacherId(userDetails.getId());
+            Collection<TestSessionReply> testSessionReply = studentTeacherRelationService.getTestSessionsByTeacherIdOrStudentId(userDetails.getId());
             logger.info("Successfully retrieved test sessions for user with ID: {}", userDetails.getId());
             return ResponseEntity.ok(testSessionReply);
         } catch (IllegalArgumentException e) {

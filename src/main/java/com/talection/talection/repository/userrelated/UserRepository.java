@@ -1,8 +1,10 @@
 package com.talection.talection.repository.userrelated;
 
+import com.talection.talection.enums.Role;
 import com.talection.talection.model.userrelated.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -21,4 +23,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return an Optional containing the found user, or empty if no user with the specified Google ID exists
      */
     Optional<User> findByCredentialId(String credentialId);
+
+    /**
+     * Finds all users by their role.
+     *
+     * @param role of the users
+     * @return a collection of users with the specified role
+     */
+    Collection<User> findAllByRole(Role role);
 }

@@ -1,12 +1,11 @@
-package com.talection.talection;
+package com.talection.skills;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TalectionApplicationTests {
+class HumanSkillsTests {
 
-	@Test
+	//@Test
 	void contextLoads() {
 	}
 

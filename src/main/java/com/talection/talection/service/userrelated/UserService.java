@@ -1,5 +1,6 @@
 package com.talection.talection.service.userrelated;
 
+import com.talection.talection.dto.replies.TeacherReply;
 import com.talection.talection.dto.requests.UpdateUserRequest;
 import com.talection.talection.enums.AuthProvider;
 import com.talection.talection.enums.Role;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -211,5 +213,32 @@ public class UserService {
         }
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + id));
+    }
+
+    /**
+     * Retrieves all teachers in the system.
+     *
+     * @return a collection of all teachers
+     */
+    public Collection<TeacherReply> getAllTeachers() {
+        Collection<User> users = userRepository.findAllByRole(Role.TEACHER);
+        if (users == null) {
+            logger.error("User repository returned null");
+            throw new IllegalStateException("User repository returned null");
+        }
+        if (users.isEmpty()) {
+            logger.warn("No teachers found in the system");
+            return new ArrayList<>();
+        }
+        ArrayList<TeacherReply> replies = new ArrayList<>();
+        for (User user : users) {
+            TeacherReply reply = new TeacherReply();
+            reply.setTeacherId(user.getId());
+            reply.setTeacherName(user.getFirstName());
+            reply.setTeacherEmail(user.getEmail());
+            replies.add(reply);
+        }
+        logger.info("Retrieved {} teachers from the system", replies.size());
+        return replies;
     }
 }

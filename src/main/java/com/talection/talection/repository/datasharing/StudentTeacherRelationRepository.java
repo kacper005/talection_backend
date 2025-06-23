@@ -1,7 +1,10 @@
 package com.talection.talection.repository.datasharing;
 
 import com.talection.talection.model.datasharing.StudentTeacherRelation;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 
@@ -14,6 +17,15 @@ public interface StudentTeacherRelationRepository extends JpaRepository<StudentT
      * @return the StudentTeacherRelation if found, otherwise null
      */
     StudentTeacherRelation findByStudentIdAndTeacherId(Long studentId, Long teacherId);
+
+    /**
+     * Finds all StudentTeacherRelations by student ID or teacher ID.
+     *
+     * @param id the ID of the student or teacher
+     * @return a collection of StudentTeacherRelations associated with the given ID
+     */
+    @Query("SELECT r FROM StudentTeacherRelation r WHERE r.studentId = :id OR r.teacherId = :id")
+    Collection<StudentTeacherRelation> findAllByStudentIdOrTeacherId(@Param("id") Long id);
 
     /**
      * Finds all StudentTeacherRelations by teacher ID.
