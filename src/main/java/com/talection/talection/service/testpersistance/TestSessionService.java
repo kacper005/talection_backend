@@ -22,7 +22,9 @@ import com.talection.talection.service.userrelated.UserService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Service for managing test sessions.
@@ -166,11 +168,17 @@ public class TestSessionService {
         reply.setId(testSession.getId());
         reply.setStartTime(testSession.getStartTime());
         reply.setEndTime(testSession.getEndTime());
-        reply.setChoices(
-                testSession.getChoices().stream()
-                        .map(this::convertToChoiceReply)
-                        .toList()
-        );
+
+        ArrayList<TestChoice> choices = new ArrayList<>(testSession.getChoices());
+        if (choices.isEmpty()) {
+            throw new IllegalArgumentException("TestSession must have at least one choice");
+        }
+        ArrayList<TestChoiceReply> choiceReplies = new ArrayList<>();
+        for (int i = 0; i < testSession.getChoices().size(); i++) {
+            choiceReplies.add(convertToChoiceReply(testSession.getChoices().get(i), i + 1));
+        }
+        reply.setChoices(choiceReplies);
+
         reply.setUserId(testSession.getUserId());
 
         User user = userService.getUserById(testSession.getUserId());
@@ -193,7 +201,7 @@ public class TestSessionService {
      * @throws TestQuestionNotFoundException if the question associated with the choice does not exist
      * @throws TestOptionNotFoundException if the selected option associated with the choice does not exist
      */
-    private TestChoiceReply convertToChoiceReply(TestChoice choice) {
+    private TestChoiceReply convertToChoiceReply(TestChoice choice, int questionNumber) {
         if (choice == null) {
             return null;
         }
@@ -212,7 +220,17 @@ public class TestSessionService {
         if (selectedOption.getType() == TestOptionType.LIKERT_SCALE) {
             reply.setAnswer(getLikertScaleText(selectedOption.getAgreementLevel()));
         } else if (selectedOption.getType() == TestOptionType.MULTIPLE_CHOICE) {
-            reply.setAnswer(selectedOption.getOptionText());
+            List<TestOption> correctOptions = question.getCorrectOptions();
+            boolean wasCorrect = false;
+            for (TestOption option : correctOptions) {
+                if (option.getId().equals(selectedOption.getId())) {
+                    wasCorrect = true;
+                }
+            }
+
+            //TODO: Change logic if more Multiple Choice tests are added
+            reply.setAnswer(wasCorrect ? "Correct" : "Incorrect");
+            reply.setQuestion(questionNumber + ".");
         } else {
             throw new UnsupportedOperationException("Unsupported TestOptionType: " + selectedOption.getType());
         }
