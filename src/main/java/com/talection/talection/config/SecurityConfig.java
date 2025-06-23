@@ -57,6 +57,10 @@ public class SecurityConfig {
                         // Allow only GET requests
                         .requestMatchers(
                                 HttpMethod.GET, "/test/get-all", "/test/get/{id}", "/test/get-by-test-type/{testType}", "/testsessions/evaluate"
+
+                        ).permitAll()
+                        .requestMatchers(
+                                HttpMethod.POST, "/testsessions/evaluate"
                         ).permitAll()
                         // Allow all requests
                         .requestMatchers("/user/add", "/authenticate"
