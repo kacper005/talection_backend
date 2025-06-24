@@ -22,6 +22,7 @@ public class TestSessionReply {
     private Date startTime;
     private Date endTime;
     private List<TestChoiceReply> choices;
+    private int score;
 
     /**
      * Returns the ID of the test session.
@@ -181,5 +182,23 @@ public class TestSessionReply {
      */
     public void setChoices(List<TestChoiceReply> choices) {
         this.choices = choices;
+    }
+
+    /**
+     * Gets the score achieved in the test session.
+     *
+     * @return the score of the test session
+     */
+    public int getScore() {
+        return score;
+    }
+
+    /**
+     * Sets the score achieved in the test session.
+     *
+     * @param score the score to set for the test session
+     */
+    public void setScore(int score) {
+        this.score = score;
     }
 }

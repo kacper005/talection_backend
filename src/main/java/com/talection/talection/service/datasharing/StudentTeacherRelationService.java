@@ -48,6 +48,33 @@ public class StudentTeacherRelationService {
     }
 
     /**
+     * Retrieves all teachers associated with a given student ID and test session ID.
+     *
+     * @param studentId the ID of the student
+     * @param testSessionId the ID of the test session
+     * @return a collection of TeacherReply objects containing teacher details
+     * @throws IllegalArgumentException if either studentId or testSessionId is null
+     */
+    public Collection<TeacherRelationReply> getTeachersByStudentIdAndSessionId(Long studentId, Long testSessionId) {
+        if (studentId == null || testSessionId == null) {
+            throw new IllegalArgumentException("Student ID and Test Session ID must not be null");
+        }
+
+        Collection<StudentTeacherRelation> relations = studentTeacherRelationRepository.findAllByStudentIdAndTestSessionId(studentId, testSessionId);
+        ArrayList<TeacherRelationReply> replies = new ArrayList<>();
+        for (StudentTeacherRelation relation : relations) {
+            User user = userService.getUserById(relation.getTeacherId());
+            TeacherRelationReply reply = new TeacherRelationReply();
+            reply.setTeacherEmail(user.getEmail());
+            reply.setTeacherName(user.getFirstName());
+            reply.setRelationId(relation.getId());
+            replies.add(reply);
+        }
+
+        return replies;
+    }
+
+    /**
      * Adds a new Student-Teacher relation for a given student, teacher, and test session.
      *
      * @param studentId the ID of the student

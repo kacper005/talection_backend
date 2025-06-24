@@ -53,13 +53,30 @@ public class StudentTeacherRelationController {
         }
     }
 
-    @GetMapping("/teachers")
+    /**
+     * Retrieves all teachers associated with the currently authenticated student.
+     *
+     * @return ResponseEntity containing a collection of TeacherRelationReply objects
+     */
+    @GetMapping("/teachers/{id}")
     @PreAuthorize("hasAuthority('STUDENT')")
-    public ResponseEntity<Collection<TeacherRelationReply>> getTeachersForStudent() {
+    public ResponseEntity<Collection<TeacherRelationReply>> getTeachersForStudentByTestSessionId(@PathVariable String id) {
+        if (id == null || id.isEmpty()) {
+            logger.error("Invalid student ID provided: {}", id);
+            return ResponseEntity.badRequest().build();
+        }
+        long parsedId;
+
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            logger.error("Invalid student ID format: {}", id);
+            return ResponseEntity.badRequest().build();
+        }
         AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         try {
-            Collection<TeacherRelationReply> relations = studentTeacherRelationService.getTeachersByStudentId(userDetails.getId());
+            Collection<TeacherRelationReply> relations = studentTeacherRelationService.getTeachersByStudentIdAndSessionId(userDetails.getId(), parsedId);
             logger.info("Successfully retrieved teachers for student with ID: {}", userDetails.getId());
             return ResponseEntity.ok(relations);
         } catch (IllegalArgumentException e) {

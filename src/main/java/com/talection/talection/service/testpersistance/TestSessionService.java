@@ -183,17 +183,29 @@ public class TestSessionService {
         reply.setId(testSession.getId());
         reply.setStartTime(testSession.getStartTime());
         reply.setEndTime(testSession.getEndTime());
+        TestTemplate testTemplate = testTemplateRepository.findById(testSession.getTestTemplateId())
+                .orElseThrow(() -> new TestTemplateNotFoundException("TestTemplate not found with id: " + testSession.getTestTemplateId()));
+        reply.setTestName(testTemplate.getName());
 
         ArrayList<TestChoice> choices = new ArrayList<>(testSession.getChoices());
         if (choices.isEmpty()) {
             throw new IllegalArgumentException("TestSession must have at least one choice");
         }
+
+        int score = 0;
         ArrayList<TestChoiceReply> choiceReplies = new ArrayList<>();
         for (int i = 0; i < testSession.getChoices().size(); i++) {
-            choiceReplies.add(convertToChoiceReply(testSession.getChoices().get(i), i + 1));
+            TestChoiceReply choiceReply = convertToChoiceReply(choices.get(i), i + 1);
+            if (testTemplate.getOptionType() == TestOptionType.MULTIPLE_CHOICE) {
+                if (choiceReply.getAnswer().equals("Correct")) {
+                    score++;
+                }
+            }
+            choiceReplies.add(choiceReply);
         }
         reply.setChoices(choiceReplies);
 
+        reply.setScore(score);
         reply.setUserId(testSession.getUserId());
 
         if (testSession.getUserId() != null) {
@@ -202,9 +214,7 @@ public class TestSessionService {
             reply.setUserRole(user.getRole());
         }
 
-        TestTemplate testTemplate = testTemplateRepository.findById(testSession.getTestTemplateId())
-                .orElseThrow(() -> new TestTemplateNotFoundException("TestTemplate not found with id: " + testSession.getTestTemplateId()));
-        reply.setTestName(testTemplate.getName());
+
         reply.setTestDescription(testTemplate.getDescription());
 
         return reply;
