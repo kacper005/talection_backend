@@ -51,4 +51,23 @@ public interface StudentTeacherRelationRepository extends JpaRepository<StudentT
      * @return a collection of StudentTeacherRelations associated with the student and test session
      */
     Collection<StudentTeacherRelation> findAllByStudentIdAndTestSessionId(Long studentId, Long testSessionId);
+
+    /**
+     * Finds all StudentTeacherRelations by teacher ID and test session ID.
+     *
+     * @param teacherId the ID of the teacher
+     * @param testSessionId the ID of the test session
+     * @return a collection of StudentTeacherRelations associated with the teacher and test session
+     */
+    Collection<StudentTeacherRelation> findAllByTeacherIdAndTestSessionId(Long teacherId, Long testSessionId);
+
+    /**
+     * Finds a StudentTeacherRelation by student ID, teacher ID, and test session ID.
+     *
+     * @param studentId the ID of the student
+     * @param teacherId the ID of the teacher
+     * @param testSessionId the ID of the test session
+     * @return the StudentTeacherRelation if found, otherwise null
+     */
+    StudentTeacherRelation findByStudentIdAndTeacherIdAndTestSessionId(Long studentId, Long teacherId, Long testSessionId);
 }

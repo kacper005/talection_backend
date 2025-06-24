@@ -1,7 +1,6 @@
 package com.talection.talection.service.datasharing;
 
 import com.talection.talection.dto.replies.TeacherRelationReply;
-import com.talection.talection.dto.replies.TeacherReply;
 import com.talection.talection.dto.replies.TestSessionReply;
 import com.talection.talection.enums.Role;
 import com.talection.talection.model.datasharing.StudentTeacherRelation;
@@ -102,6 +101,10 @@ public class StudentTeacherRelationService {
             throw new IllegalArgumentException("User with ID " + teacherId + " is not a teacher");
         }
 
+        if (studentTeacherRelationRepository.findByStudentIdAndTeacherIdAndTestSessionId(studentId, teacherId, testSessionId) != null) {
+            throw new IllegalArgumentException("Relation between student and teacher already exists");
+        }
+
         // Create and save the relation
         var relation = new com.talection.talection.model.datasharing.StudentTeacherRelation();
         relation.setStudentId(studentId);
@@ -144,6 +147,27 @@ public class StudentTeacherRelationService {
             .map(relation -> testSessionService.getTestSessionReplyById(relation.getTestSessionId()))
             .filter(Objects::nonNull)
             .toList();
+    }
+
+    /**
+     * Retrieves a TestSessionReply by its ID and the associated student ID.
+     *
+     * @param testSessionId the ID of the test session
+     * @param studentId the ID of the student
+     * @return the TestSessionReply object if found
+     * @throws IllegalArgumentException if either ID is null or if no relation is found
+     */
+    public TestSessionReply getTestSessionByIdAndTeacherId(Long testSessionId, Long studentId) {
+        if (testSessionId == null || studentId == null) {
+            throw new IllegalArgumentException("Test Session ID and Student ID must not be null");
+        }
+
+        Collection<StudentTeacherRelation> relations = studentTeacherRelationRepository.findAllByTeacherIdAndTestSessionId(studentId, testSessionId);
+        if (relations.isEmpty()) {
+            throw new IllegalArgumentException("No relation found for the given Student ID and Test Session ID");
+        }
+
+        return testSessionService.getTestSessionReplyById(testSessionId);
     }
 
     /**

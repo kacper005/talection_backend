@@ -111,6 +111,29 @@ public class StudentTeacherRelationController {
         }
     }
 
+    @GetMapping("/testSession/{teacherId}")
+    @PreAuthorize("hasAnyAuthority('TEACHER')")
+    public ResponseEntity<TestSessionReply> getTestSessionsByTestSessionId(@PathVariable Long teacherId) {
+        AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (teacherId == null) {
+            logger.error("Invalid test session ID provided: {}", teacherId);
+            return ResponseEntity.badRequest().build();
+        }
+
+        try {
+            TestSessionReply testSessionReply = studentTeacherRelationService.getTestSessionByIdAndTeacherId(teacherId, userDetails.getId());
+            logger.info("Successfully retrieved test sessions for test session ID: {}", teacherId);
+            return ResponseEntity.ok(testSessionReply);
+        } catch (IllegalArgumentException e) {
+            logger.error("Error retrieving test sessions for test session ID {}: {}", teacherId, e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            logger.error("Unexpected error while retrieving test sessions for test session ID {}: {}", teacherId, e.getMessage());
+            return ResponseEntity.status(500).build();
+        }
+    }
+
     /**
      * Deletes a student-teacher relation by its ID.
      *
