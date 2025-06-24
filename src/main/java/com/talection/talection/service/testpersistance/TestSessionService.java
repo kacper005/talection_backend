@@ -4,6 +4,7 @@ import com.talection.talection.dto.replies.TestChoiceReply;
 import com.talection.talection.dto.replies.TestSessionReply;
 import com.talection.talection.enums.TestOptionType;
 import com.talection.talection.exception.*;
+import com.talection.talection.model.datasharing.StudentTeacherRelation;
 import com.talection.talection.model.testpersistance.TestChoice;
 import com.talection.talection.model.testpersistance.TestSession;
 import com.talection.talection.model.tests.TestOption;
@@ -11,10 +12,12 @@ import com.talection.talection.model.tests.TestQuestion;
 import com.talection.talection.model.tests.TestTemplate;
 import com.talection.talection.model.userrelated.StudyProgram;
 import com.talection.talection.model.userrelated.User;
+import com.talection.talection.repository.datasharing.StudentTeacherRelationRepository;
 import com.talection.talection.repository.testpersistance.TestChoiceRepository;
 import com.talection.talection.repository.testpersistance.TestSessionRepository;
 import com.talection.talection.repository.tests.TestTemplateRepository;
 import com.talection.talection.repository.userrelated.UserRepository;
+import com.talection.talection.service.datasharing.StudentTeacherRelationService;
 import com.talection.talection.service.tests.TestOptionService;
 import com.talection.talection.service.tests.TestQuestionService;
 import com.talection.talection.service.userrelated.StudyProgramService;
@@ -40,15 +43,18 @@ public class TestSessionService {
     private final TestOptionService testOptionService;
     private final UserService userService;
 
+    private final StudentTeacherRelationRepository studentTeacherRelationRepository;
+
 
     public TestSessionService(TestSessionRepository testSessionRepository, TestChoiceRepository testChoiceRepository, UserService userService,
-                              TestTemplateRepository testTemplateRepository, TestQuestionService testQuestionService, TestOptionService testOptionService) {
+                              TestTemplateRepository testTemplateRepository, TestQuestionService testQuestionService, TestOptionService testOptionService, StudentTeacherRelationRepository studentTeacherRelationRepository) {
         this.testSessionRepository = testSessionRepository;
         this.testChoiceRepository = testChoiceRepository;
         this.userService = userService;
         this.testTemplateRepository = testTemplateRepository;
         this.testQuestionService = testQuestionService;
         this.testOptionService = testOptionService;
+        this.studentTeacherRelationRepository = studentTeacherRelationRepository;
     }
 
     /**
@@ -98,6 +104,12 @@ public class TestSessionService {
         }
         TestSession testSession = testSessionRepository.findById(id)
                 .orElseThrow(() -> new TestSessionNotFoundException("TestSession not found with id: " + id));
+
+        ArrayList<StudentTeacherRelation> relations = new ArrayList<>(studentTeacherRelationRepository.findAllByTestSessionId(id));
+        for (StudentTeacherRelation relation : relations) {
+            studentTeacherRelationRepository.delete(relation);
+        }
+
         testSessionRepository.delete(testSession);
     }
 
