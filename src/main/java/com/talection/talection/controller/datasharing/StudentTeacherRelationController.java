@@ -111,25 +111,25 @@ public class StudentTeacherRelationController {
         }
     }
 
-    @GetMapping("/testSession/{teacherId}")
+    @GetMapping("/testSession/{sessionId}")
     @PreAuthorize("hasAnyAuthority('TEACHER')")
-    public ResponseEntity<TestSessionReply> getTestSessionsByTestSessionId(@PathVariable Long teacherId) {
+    public ResponseEntity<TestSessionReply> getTestSessionsByTestSessionId(@PathVariable Long sessionId) {
         AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (teacherId == null) {
-            logger.error("Invalid test session ID provided: {}", teacherId);
+        if (sessionId == null) {
+            logger.error("Invalid test session ID provided: {}", sessionId);
             return ResponseEntity.badRequest().build();
         }
 
         try {
-            TestSessionReply testSessionReply = studentTeacherRelationService.getTestSessionByIdAndTeacherId(teacherId, userDetails.getId());
-            logger.info("Successfully retrieved test sessions for test session ID: {}", teacherId);
+            TestSessionReply testSessionReply = studentTeacherRelationService.getTestSessionByIdAndTeacherId(sessionId, userDetails.getId());
+            logger.info("Successfully retrieved test sessions for test session ID: {}", sessionId);
             return ResponseEntity.ok(testSessionReply);
         } catch (IllegalArgumentException e) {
-            logger.error("Error retrieving test sessions for test session ID {}: {}", teacherId, e.getMessage());
+            logger.error("Error retrieving test sessions for test session ID {}: {}", sessionId, e.getMessage());
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
-            logger.error("Unexpected error while retrieving test sessions for test session ID {}: {}", teacherId, e.getMessage());
+            logger.error("Unexpected error while retrieving test sessions for test session ID {}: {}", sessionId, e.getMessage());
             return ResponseEntity.status(500).build();
         }
     }
