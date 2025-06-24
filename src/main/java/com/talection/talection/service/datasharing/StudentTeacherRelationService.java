@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class StudentTeacherRelationService {
@@ -174,19 +175,19 @@ public class StudentTeacherRelationService {
      * Deletes a Student-Teacher relation based on the provided student ID and teacher ID.
      *
      * @param studentId the ID of the student
-     * @param teacherId the ID of the teacher
+     * @param relationId the ID of the teacher
      * @throws IllegalArgumentException if either ID is null or if no relation is found
      */
-    public void deleteStudentTeacherRelation(Long studentId, Long teacherId) {
-        if (studentId == null || teacherId == null) {
+    public void deleteStudentTeacherRelation(Long studentId, Long relationId) {
+        if (studentId == null || relationId == null) {
             throw new IllegalArgumentException("Student ID and Teacher ID must not be null");
         }
 
-        StudentTeacherRelation relation = studentTeacherRelationRepository.findByStudentIdAndTeacherId(studentId, teacherId);
-        if (relation != null) {
-            studentTeacherRelationRepository.delete(relation);
-        } else {
-            throw new IllegalArgumentException("No relation found for the given Student ID and Teacher ID");
+        Optional<StudentTeacherRelation> relation = studentTeacherRelationRepository.findById(relationId);
+        if (relation.isEmpty() || !relation.get().getStudentId().equals(studentId)) {
+            throw new IllegalArgumentException("No relation found for the given relation id");
         }
+
+        studentTeacherRelationRepository.delete(relation.get());
     }
 }
