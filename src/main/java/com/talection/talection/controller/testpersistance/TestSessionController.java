@@ -81,7 +81,7 @@ public class TestSessionController {
      * @param testSession the test session to evaluate
      * @return ResponseEntity containing the evaluation result
      */
-    @GetMapping("/evaluate")
+    @PostMapping("/evaluate")
     public ResponseEntity<TestSessionReply> evaluateTestSession(@RequestBody TestSession testSession) {
         try {
             TestSessionReply reply = testSessionService.evaluateTestSession(testSession);
