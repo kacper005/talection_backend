@@ -111,6 +111,12 @@ public class StudentTeacherRelationController {
         }
     }
 
+    /**
+     * Retrieves a specific test session by its ID for the currently authenticated teacher.
+     *
+     * @param sessionId the ID of the test session to retrieve
+     * @return ResponseEntity containing the TestSessionReply or an error message
+     */
     @GetMapping("/testSession/{sessionId}")
     @PreAuthorize("hasAnyAuthority('TEACHER')")
     public ResponseEntity<TestSessionReply> getTestSessionsByTestSessionId(@PathVariable Long sessionId) {

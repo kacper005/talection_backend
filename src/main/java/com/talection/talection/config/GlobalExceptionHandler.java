@@ -16,9 +16,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleException(Exception ex) {
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", Instant.now().toEpochMilli());
-        response.put("status", HttpStatus.FORBIDDEN.value());
-        response.put("error", "Forbidden");
-        response.put("message", "Access Denied");
+        response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.put("error", "Error");
+        response.put("message", "Internal Server Error");
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 }
