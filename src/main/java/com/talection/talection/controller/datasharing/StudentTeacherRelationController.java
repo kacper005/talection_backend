@@ -59,7 +59,7 @@ public class StudentTeacherRelationController {
      * @return ResponseEntity containing a collection of TeacherRelationReply objects
      */
     @GetMapping("/teachers/{id}")
-    @PreAuthorize("hasAuthority('STUDENT')")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER')")
     public ResponseEntity<Collection<TeacherRelationReply>> getTeachersForStudentByTestSessionId(@PathVariable String id) {
         if (id == null || id.isEmpty()) {
             logger.error("Invalid student ID provided: {}", id);
@@ -141,7 +141,7 @@ public class StudentTeacherRelationController {
      * @return ResponseEntity indicating success or failure
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('STUDENT')")
+    @PreAuthorize("hasAnyAuthority('STUDENT', 'TEACHER')")
     public ResponseEntity<String> deleteStudentTeacherRelation(@PathVariable Long id) {
         AccessUserDetails userDetails = (AccessUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
