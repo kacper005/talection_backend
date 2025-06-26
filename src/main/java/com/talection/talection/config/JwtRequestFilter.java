@@ -1,7 +1,8 @@
 package com.talection.talection.config;
 
 import com.talection.talection.exception.JwtExpiredException;
-import com.talection.talection.service.UserDetailsServiceImplementation;
+import com.talection.talection.service.userrelated.UserDetailsServiceImplementation;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -69,6 +70,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 }
             }
         } catch (JwtExpiredException e) {
+            logger.error("JWT token is expired");
+        } catch (ExpiredJwtException e) {
             logger.error("JWT token is expired: {}", e.getMessage());
         }
 

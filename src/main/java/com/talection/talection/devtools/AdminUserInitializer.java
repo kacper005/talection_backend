@@ -1,17 +1,16 @@
 package com.talection.talection.devtools;
 
-import com.talection.talection.controller.UserController;
+import com.talection.talection.controller.userrelated.UserController;
 import com.talection.talection.enums.AuthProvider;
 import com.talection.talection.enums.Gender;
 import com.talection.talection.enums.Role;
 import com.talection.talection.exception.UserAlreadyExistsException;
-import com.talection.talection.model.User;
-import com.talection.talection.service.UserService;
+import com.talection.talection.model.userrelated.User;
+import com.talection.talection.service.userrelated.UserService;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class AdminUserInitializer implements ApplicationListener<ApplicationReadyEvent> {
     private final UserService userService;
     Dotenv dotenv = Dotenv.load();
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final Logger logger = LoggerFactory.getLogger(AdminUserInitializer.class);
 
 
     public AdminUserInitializer(UserService userService) {
